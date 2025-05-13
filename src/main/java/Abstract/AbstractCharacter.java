@@ -1,7 +1,7 @@
 package Abstract;
 import Class.*;
 
-public class AbstractCharacter {
+public abstract class AbstractCharacter {
     private final static int SIZE = 30;
     private int x;
     private int y;

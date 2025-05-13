@@ -8,7 +8,7 @@ import Class.Player;
  * coordinate that will be the placement for the powerup.
  */
 
-public class AbstractPowerUp {
+public abstract class AbstractPowerUp {
 
     // Constants are static by definition.
     private final static int POWERUP_SIZE = 30;
