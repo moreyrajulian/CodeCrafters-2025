@@ -1,7 +1,7 @@
 package Class;
 
 /**
- *  This enum represents the different types of components the the floor can have.
+ *  This enum represents the different types of components the floor can have.
  */
 public enum FloorTile 	// Inspector complains on enum not being used, which is not the case.
 {

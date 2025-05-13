@@ -131,9 +131,9 @@ public class Floor {
     }
 
     public void notifyListeners() {
-	for (FloorListener b : floorListeners) {
-	    b.floorChanged();
-	}
+		for (FloorListener b : floorListeners) {
+			b.floorChanged();
+		}
     }
 
     /**

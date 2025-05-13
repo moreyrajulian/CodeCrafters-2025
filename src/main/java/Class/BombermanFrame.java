@@ -6,23 +6,25 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
+//Un JFrame es una ventana de Java Swing
 public class BombermanFrame extends JFrame
 {
     private Floor floor; 
     private BombermanComponent bombermanComponent;
 
     public BombermanFrame(final String title, Floor floor) throws HeadlessException {
-	super(title);
-	this.floor = floor;
-	this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-	bombermanComponent = new BombermanComponent(floor);
-	floor.createPlayer(bombermanComponent, floor);
-	setKeyStrokes();
+		super(title); //Titulo en la ventana
+		this.floor = floor;
+		this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE); //La funcion setDefaultCloseOperation de JFrame
+																		 //determina que hacer cuando se cierra la ventana
+		bombermanComponent = new BombermanComponent(floor);
+		floor.createPlayer(bombermanComponent, floor);
+		setKeyStrokes();
 
-	this.setLayout(new BorderLayout());
-	this.add(bombermanComponent, BorderLayout.CENTER);
-	this.pack();
-	this.setVisible(true);
+		this.setLayout(new BorderLayout());
+		this.add(bombermanComponent, BorderLayout.CENTER);
+		this.pack();
+		this.setVisible(true);
     }
 
     public BombermanComponent getBombermanComponent() {

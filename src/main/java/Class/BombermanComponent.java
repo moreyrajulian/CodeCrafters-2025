@@ -1,8 +1,11 @@
 package Class;
 
 import Abstract.*;
+
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
 import java.util.AbstractMap;
 import java.util.EnumMap;
 
@@ -10,12 +13,13 @@ import java.util.EnumMap;
 public class BombermanComponent extends JComponent implements FloorListener
 {
     // Constants are static by definition.
-    private final static int SQUARE_SIZE = 40;
+    private final static int SQUARE_SIZE = 40; //Tamaño de los cuadrados
     private final static int CHARACTER_ADJUSTMENT_FOR_PAINT = 15;
     private final static int SQUARE_MIDDLE = SQUARE_SIZE/2;
     private final static int BOMB_ADJUSTMENT_1 =5;
     private final static int BOMB_ADJUSTMENT_2 =10;
-    // Defining painting parameters
+
+	// Defining painting parameters
     private final static int PAINT_PARAMETER_13 = 13;
     private final static int PAINT_PARAMETER_15 = 15;
     private final static int PAINT_PARAMETER_17 = 17;
@@ -24,15 +28,20 @@ public class BombermanComponent extends JComponent implements FloorListener
     private final static int PAINT_PARAMETER_20 = 20;
     private final static int PAINT_PARAMETER_24 = 24;
     private final Floor floor;
-    private final AbstractMap<FloorTile, Color> colorMap;
+    private final AbstractMap<FloorTile, Image> imageMap;
 
     public BombermanComponent(Floor floor) {
 	this.floor = floor;
 
-	colorMap = new EnumMap<>(FloorTile.class);
-	colorMap.put(FloorTile.FLOOR, Color.GREEN);
-	colorMap.put(FloorTile.UNBREAKABLEBLOCK, Color.BLACK);
-	colorMap.put(FloorTile.BREAKABLEBLOCK, Color.RED);
+	imageMap = new EnumMap<>(FloorTile.class);
+	try{
+		imageMap.put(FloorTile.FLOOR, ImageIO.read(getClass().getResource("/tiles/suelo.png")));
+		imageMap.put(FloorTile.UNBREAKABLEBLOCK, ImageIO.read(getClass().getResource("/tiles/pared.png")));
+		imageMap.put(FloorTile.BREAKABLEBLOCK, ImageIO.read(getClass().getResource("/tiles/breakableblock.png")));
+	} catch (IOException e) {
+		throw new RuntimeException(e);
+	}
+
     }
 
     // This method is static since each square has the same size.
@@ -45,90 +54,125 @@ public class BombermanComponent extends JComponent implements FloorListener
 	return SQUARE_MIDDLE;
     }
 
-    public Dimension getPreferredSize() {
-	super.getPreferredSize();
-	return new Dimension(this.floor.getWidth() * SQUARE_SIZE, this.floor.getHeight() * SQUARE_SIZE);
+	/**
+	 * Este metodo sobreescribe {@code getPreferredSize()} de JComponent y devuelve una Dimension correspondiente
+	 * al producto de {@code getWidth} por SQUARE_SIZE y {@code getHeigth} por SQUARE_SIZE
+	 * @return Dimension
+	 */
+
+	@Override
+	public Dimension getPreferredSize() {
+		//super.getPreferredSize(); //No le encuentro el uso
+		return new Dimension(this.floor.getWidth() * SQUARE_SIZE, this.floor.getHeight() * SQUARE_SIZE);
     }
 
+	/**
+	 * Este metodo llama a repaint() el cual es un metodo de Component que internamente llama a
+	 * paintComponent
+	 */
     public void floorChanged() {
-	repaint();
+		repaint();
     }
 
+	/**
+	 * Este metodo sobreescribe al metodo {@code paintComponent} de la super clase indicando como debe dibujarse
+	 * los componentes
+	 * @param g the <code>Graphics</code> object to protect
+	 */
     @Override
     protected void paintComponent(Graphics g) {
-	super.paintComponent(g);
-	final Graphics2D g2d = (Graphics2D) g;
+		super.paintComponent(g);
+		final Graphics2D g2d = (Graphics2D) g; //Castea like Eschoyez
 
-	for (int rowIndex = 0; rowIndex < floor.getHeight(); rowIndex++) {
-	    for (int colIndex = 0; colIndex < floor.getWidth(); colIndex++) {
-		g2d.setColor(colorMap.get(this.floor.getFloorTile(rowIndex, colIndex)));
-		if(floor.getFloorTile(rowIndex, colIndex)==FloorTile.BREAKABLEBLOCK){
-		    paintBreakableBlock(rowIndex, colIndex, g2d);
+		//Los for anidados recorren la matriz de bloques del suelo
+		for (int rowIndex = 0; rowIndex < floor.getHeight(); rowIndex++) {
+			for (int colIndex = 0; colIndex < floor.getWidth(); colIndex++) {
+
+				FloorTile tile = floor.getFloorTile(rowIndex, colIndex);
+				Image img = imageMap.get(tile);
+
+				//g2d funciona como un pincel. Le cargo la pintura y despues pinto
+				//g2d.setColor(imageMap.get(this.floor.getFloorTile(rowIndex, colIndex)));//Aca le cargo la pintura segun el mapa de colores
+
+				//Si el bloque en [rowIndex][colIndex] es "rompible" llama a paintBreakableBlock
+				if(floor.getFloorTile(rowIndex, colIndex)==FloorTile.BREAKABLEBLOCK){
+					//paintBreakableBlock(rowIndex, colIndex, g2d);
+					if (img != null) {
+						g2d.drawImage(img, colIndex * SQUARE_SIZE, rowIndex * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE, null);
+					}
+				}
+				//Si el bloque en [rowIndex][colIndex] es "irrompible" llama a paintUnbreakableBlock
+				else if(floor.getFloorTile(rowIndex, colIndex)==FloorTile.UNBREAKABLEBLOCK){
+					//paintUnbreakableBlock(rowIndex, colIndex, g2d);
+					if (img != null) {
+						g2d.drawImage(img, colIndex * SQUARE_SIZE, rowIndex * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE, null);
+					}
+				}
+				//Si el bloque en [rowIndex][colIndex] es "comun" llama a paintFloor
+				else{
+					//paintFloor(rowIndex, colIndex, g2d);
+					if (img != null) {
+						g2d.drawImage(img, colIndex * SQUARE_SIZE, rowIndex * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE, null);
+					}
+				}
+			}
 		}
-		else if(floor.getFloorTile(rowIndex, colIndex)==FloorTile.UNBREAKABLEBLOCK){
-		    paintUnbreakableBlock(rowIndex, colIndex, g2d);
+		// Paint player:
+		paintPlayer(floor.getPlayer(), g2d);
+
+		//Paint enemies
+		for (Enemy e: floor.getEnemyList()) {
+			paintEnemy(e, g2d);
 		}
-		else{
-		    paintFloor(rowIndex, colIndex, g2d);
+
+		//Paint powerups
+		for (AbstractPowerUp p: floor.getPowerupList()) {
+			if (p.getName().equals("BombCounter")) {
+			g2d.setColor(Color.BLACK);
+			} else if (p.getName().equals("BombRadius")) {
+			g2d.setColor(Color.RED);
+			}
+			g2d.fillOval(p.getX()-CHARACTER_ADJUSTMENT_FOR_PAINT, p.getY()-CHARACTER_ADJUSTMENT_FOR_PAINT, p.getPowerUpSize(), p.getPowerUpSize());
 		}
-	    }
-	}
-	// Paint player:
-	paintPlayer(floor.getPlayer(), g2d);
 
-	//Paint enemies
-	for (Enemy e: floor.getEnemyList()) {
-	    paintEnemy(e, g2d);
-	}
+		//Paint bombs
+		for (Bomb b: floor.getBombList()) {
+			g2d.setColor(Color.RED);
+			int bombX = floor.squareToPixel(b.getColIndex());
+			int bombY = floor.squareToPixel(b.getRowIndex());
+			g2d.fillOval(bombX + BOMB_ADJUSTMENT_1, bombY + BOMB_ADJUSTMENT_1, Bomb.getBOMBSIZE(), Bomb.getBOMBSIZE());
+			g2d.setColor(Color.ORANGE);
+			g2d.fillOval(bombX + BOMB_ADJUSTMENT_2, bombY + BOMB_ADJUSTMENT_1, BOMB_ADJUSTMENT_1, BOMB_ADJUSTMENT_2);
+		}
 
-	//Paint powerups
-	for (AbstractPowerUp p: floor.getPowerupList()) {
-	    if (p.getName().equals("BombCounter")) {
-		g2d.setColor(Color.BLACK);
-	    } else if (p.getName().equals("BombRadius")) {
-		g2d.setColor(Color.RED);
-	    }
-	    g2d.fillOval(p.getX()-CHARACTER_ADJUSTMENT_FOR_PAINT, p.getY()-CHARACTER_ADJUSTMENT_FOR_PAINT, p.getPowerUpSize(), p.getPowerUpSize());
-	}
-
-	//Paint bombs
-	for (Bomb b: floor.getBombList()) {
-	    g2d.setColor(Color.RED);
-	    int bombX = floor.squareToPixel(b.getColIndex());
-	    int bombY = floor.squareToPixel(b.getRowIndex());
-	    g2d.fillOval(bombX + BOMB_ADJUSTMENT_1, bombY + BOMB_ADJUSTMENT_1, Bomb.getBOMBSIZE(), Bomb.getBOMBSIZE());
-	    g2d.setColor(Color.ORANGE);
-	    g2d.fillOval(bombX + BOMB_ADJUSTMENT_2, bombY + BOMB_ADJUSTMENT_1, BOMB_ADJUSTMENT_1, BOMB_ADJUSTMENT_2);
-	}
-
-	//Paint explosions
-	g2d.setColor(Color.ORANGE);
-	for (Explosion tup: floor.getExplosionCoords()) {
-	    g2d.fillOval(floor.squareToPixel(tup.getColIndex()) + BOMB_ADJUSTMENT_1, floor.squareToPixel(tup.getRowIndex()) +
-										     BOMB_ADJUSTMENT_1, Bomb.getBOMBSIZE(), Bomb.getBOMBSIZE());
-	}
+		//Paint explosions
+		g2d.setColor(Color.ORANGE);
+		for (Explosion tup: floor.getExplosionCoords()) {
+			g2d.fillOval(floor.squareToPixel(tup.getColIndex()) + BOMB_ADJUSTMENT_1, floor.squareToPixel(tup.getRowIndex()) +
+												 BOMB_ADJUSTMENT_1, Bomb.getBOMBSIZE(), Bomb.getBOMBSIZE());
+		}
     }
 
     private void paintBreakableBlock(int rowIndex, int colIndex, Graphics g2d){
-	g2d.setColor(Color.lightGray);
-	g2d.fillRect(colIndex * SQUARE_SIZE, rowIndex * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE);
-	g2d.setColor(Color.BLUE);
-	g2d.drawLine(colIndex* SQUARE_SIZE+1, rowIndex*SQUARE_SIZE+10, colIndex*SQUARE_SIZE+SQUARE_SIZE, rowIndex*SQUARE_SIZE+10);
-	g2d.drawLine(colIndex* SQUARE_SIZE+1, rowIndex*SQUARE_SIZE+SQUARE_MIDDLE, colIndex*SQUARE_SIZE+SQUARE_SIZE, rowIndex*SQUARE_SIZE+SQUARE_MIDDLE);
-	g2d.drawLine(colIndex* SQUARE_SIZE+1, rowIndex*SQUARE_SIZE+SQUARE_MIDDLE+10, colIndex*SQUARE_SIZE+SQUARE_SIZE, rowIndex*SQUARE_SIZE+SQUARE_MIDDLE+10);
-	g2d.drawLine(colIndex* SQUARE_SIZE+1, rowIndex*SQUARE_SIZE+SQUARE_SIZE, colIndex*SQUARE_SIZE+SQUARE_SIZE, rowIndex*SQUARE_SIZE+SQUARE_SIZE);
+		g2d.setColor(Color.lightGray);
+		g2d.fillRect(colIndex * SQUARE_SIZE, rowIndex * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE);
+		g2d.setColor(Color.BLUE);
+		g2d.drawLine(colIndex* SQUARE_SIZE+1, rowIndex*SQUARE_SIZE+10, colIndex*SQUARE_SIZE+SQUARE_SIZE, rowIndex*SQUARE_SIZE+10);
+		g2d.drawLine(colIndex* SQUARE_SIZE+1, rowIndex*SQUARE_SIZE+SQUARE_MIDDLE, colIndex*SQUARE_SIZE+SQUARE_SIZE, rowIndex*SQUARE_SIZE+SQUARE_MIDDLE);
+		g2d.drawLine(colIndex* SQUARE_SIZE+1, rowIndex*SQUARE_SIZE+SQUARE_MIDDLE+10, colIndex*SQUARE_SIZE+SQUARE_SIZE, rowIndex*SQUARE_SIZE+SQUARE_MIDDLE+10);
+		g2d.drawLine(colIndex* SQUARE_SIZE+1, rowIndex*SQUARE_SIZE+SQUARE_SIZE, colIndex*SQUARE_SIZE+SQUARE_SIZE, rowIndex*SQUARE_SIZE+SQUARE_SIZE);
 
-	g2d.drawLine(colIndex* SQUARE_SIZE+10, rowIndex*SQUARE_SIZE+1, colIndex*SQUARE_SIZE+10, rowIndex*SQUARE_SIZE+10);
-	g2d.drawLine(colIndex* SQUARE_SIZE+SQUARE_MIDDLE+10, rowIndex*SQUARE_SIZE+1, colIndex*SQUARE_SIZE+SQUARE_MIDDLE+10, rowIndex*SQUARE_SIZE+10);
+		g2d.drawLine(colIndex* SQUARE_SIZE+10, rowIndex*SQUARE_SIZE+1, colIndex*SQUARE_SIZE+10, rowIndex*SQUARE_SIZE+10);
+		g2d.drawLine(colIndex* SQUARE_SIZE+SQUARE_MIDDLE+10, rowIndex*SQUARE_SIZE+1, colIndex*SQUARE_SIZE+SQUARE_MIDDLE+10, rowIndex*SQUARE_SIZE+10);
 
-	g2d.drawLine(colIndex* SQUARE_SIZE+1, rowIndex*SQUARE_SIZE+10, colIndex*SQUARE_SIZE+1, rowIndex*SQUARE_SIZE+SQUARE_MIDDLE);
-	g2d.drawLine(colIndex* SQUARE_SIZE+SQUARE_MIDDLE+1, rowIndex*SQUARE_SIZE+10, colIndex*SQUARE_SIZE+SQUARE_MIDDLE+1, rowIndex*SQUARE_SIZE+SQUARE_MIDDLE);
+		g2d.drawLine(colIndex* SQUARE_SIZE+1, rowIndex*SQUARE_SIZE+10, colIndex*SQUARE_SIZE+1, rowIndex*SQUARE_SIZE+SQUARE_MIDDLE);
+		g2d.drawLine(colIndex* SQUARE_SIZE+SQUARE_MIDDLE+1, rowIndex*SQUARE_SIZE+10, colIndex*SQUARE_SIZE+SQUARE_MIDDLE+1, rowIndex*SQUARE_SIZE+SQUARE_MIDDLE);
 
-	g2d.drawLine(colIndex* SQUARE_SIZE+10, rowIndex*SQUARE_SIZE+1+SQUARE_MIDDLE, colIndex*SQUARE_SIZE+10, rowIndex*SQUARE_SIZE+SQUARE_MIDDLE+10);
-	g2d.drawLine(colIndex* SQUARE_SIZE+SQUARE_MIDDLE+10, rowIndex*SQUARE_SIZE+1+SQUARE_MIDDLE, colIndex*SQUARE_SIZE+SQUARE_MIDDLE+10, rowIndex*SQUARE_SIZE+SQUARE_MIDDLE+10);
+		g2d.drawLine(colIndex* SQUARE_SIZE+10, rowIndex*SQUARE_SIZE+1+SQUARE_MIDDLE, colIndex*SQUARE_SIZE+10, rowIndex*SQUARE_SIZE+SQUARE_MIDDLE+10);
+		g2d.drawLine(colIndex* SQUARE_SIZE+SQUARE_MIDDLE+10, rowIndex*SQUARE_SIZE+1+SQUARE_MIDDLE, colIndex*SQUARE_SIZE+SQUARE_MIDDLE+10, rowIndex*SQUARE_SIZE+SQUARE_MIDDLE+10);
 
-	g2d.drawLine(colIndex* SQUARE_SIZE+1, rowIndex*SQUARE_SIZE+SQUARE_MIDDLE+10, colIndex*SQUARE_SIZE+1, rowIndex*SQUARE_SIZE+SQUARE_SIZE);
-	g2d.drawLine(colIndex* SQUARE_SIZE+SQUARE_MIDDLE+1, rowIndex*SQUARE_SIZE+SQUARE_MIDDLE+10, colIndex*SQUARE_SIZE+SQUARE_MIDDLE+1, rowIndex*SQUARE_SIZE+SQUARE_SIZE);
+		g2d.drawLine(colIndex* SQUARE_SIZE+1, rowIndex*SQUARE_SIZE+SQUARE_MIDDLE+10, colIndex*SQUARE_SIZE+1, rowIndex*SQUARE_SIZE+SQUARE_SIZE);
+		g2d.drawLine(colIndex* SQUARE_SIZE+SQUARE_MIDDLE+1, rowIndex*SQUARE_SIZE+SQUARE_MIDDLE+10, colIndex*SQUARE_SIZE+SQUARE_MIDDLE+1, rowIndex*SQUARE_SIZE+SQUARE_SIZE);
     }
 
     private void paintUnbreakableBlock(int rowIndex, int colIndex, Graphics g2d){
