@@ -18,7 +18,7 @@ public abstract class AbstractCharacter {
     private int x;
     private int y;
     private int pixelsPerStep;
-
+    private int originalSpeed;
     /**
      * Crea un personaje con posición inicial y paso de movimiento definido.
      *
@@ -30,6 +30,7 @@ public abstract class AbstractCharacter {
         this.x = x;
         this.y = y;
         this.pixelsPerStep = pixelsPerStep;
+        this.originalSpeed = pixelsPerStep;
     }
 
     //Crear enum
@@ -117,6 +118,15 @@ public abstract class AbstractCharacter {
      */
     public int getRowIndex() {
         return Floor.pixelToSquare(y);
+    }
+
+    public void freeze() {
+        originalSpeed = pixelsPerStep;
+        pixelsPerStep = 0;
+    }
+
+    public void unfreeze() {
+        pixelsPerStep = originalSpeed;
     }
 
 }
