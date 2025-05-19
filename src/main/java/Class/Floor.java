@@ -7,6 +7,7 @@ import Abstract.AbstractCharacter.Move;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import javax.sound.sampled.*;
 
 
 public class Floor {
@@ -162,7 +163,10 @@ public class Floor {
 		explosionsToBeRemoved.add(e);
 	    }
 	}
-	for (Explosion e: explosionsToBeRemoved){explosionCoords.remove(e);}
+	for (Explosion e: explosionsToBeRemoved){
+		explosionCoords.remove(e);
+		sonidodejuego("explosion.wav");
+	}
 
 	for (Bomb e: explosionList) {
 	    int eRow = e.getRowIndex();
@@ -203,6 +207,7 @@ public class Floor {
 	    for (Enemy e : enemyList) {
 		if(collidingCircles(e, squareToPixel(tup.getColIndex()), squareToPixel(tup.getRowIndex()))){
 		    enemiesToBeRemoved.add(e);
+			sonidodejuego("muerte_de_enemigo.wav");
 		}
 	    }
 	    for (Enemy e: enemiesToBeRemoved ) {
@@ -284,6 +289,7 @@ public class Floor {
     public boolean collisionWithEnemies(){
 	for (Enemy enemy : enemyList) {
 	    if(collidingCircles(player, enemy.getX()-BombermanComponent.getSquareMiddle(), enemy.getY()-BombermanComponent.getSquareMiddle())){
+
 		return true;
 	    }
 	}
@@ -395,4 +401,17 @@ public class Floor {
 
 	return (cornerDistance <= (circleRadius^2));
     }
+
+	public void sonidodejuego(String fileName) {
+		try {
+			AudioInputStream audioIn = AudioSystem.getAudioInputStream(getClass().getResource("/sounds/" + fileName));
+			Clip clip = AudioSystem.getClip();
+			clip.open(audioIn);
+			clip.start(); // Se reproduce una vez
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+
 }

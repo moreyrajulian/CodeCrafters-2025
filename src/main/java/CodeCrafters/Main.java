@@ -4,6 +4,8 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import Class.*;
 import Abstract.*;
+import Utils.MP3Player;
+
 
 public class Main{
     private static final int TIME_STEP = 30;
@@ -11,6 +13,8 @@ public class Main{
     private static int height = 10;
     private static int nrOfEnemies = 5;
     private static Timer clockTimer = null;
+    private static MP3Player music;
+
 
     public static void main(String[] args) {
         startGame();
@@ -32,10 +36,18 @@ public class Main{
         clockTimer = new Timer(TIME_STEP, doOneStep);
         clockTimer.setCoalesce(true);
         clockTimer.start();
+        music = new MP3Player("background.mp3");
+        music.start();
+
     }
 
     private static void gameOver(BombermanFrame frame, Floor floor) {
+        if(music!=null){
+            music.stop();
+
+        }
         clockTimer.stop();
+        JOptionPane.showMessageDialog(null, "¡Game Over!", "Fin del juego", JOptionPane.INFORMATION_MESSAGE);
         frame.dispose();
         startGame();
     }
@@ -49,6 +61,16 @@ public class Main{
             floor.explosionHandler();
             floor.characterInExplosion();
             floor.notifyListeners();
+
+
+            //VERIFICA SI GANASTE MOSTRANDO MENSAJE
+            if (floor.getEnemyList().isEmpty()) {
+                if (music != null) music.stop();
+                clockTimer.stop();
+                JOptionPane.showMessageDialog(null, "¡Ganaste!", "Victoria", JOptionPane.INFORMATION_MESSAGE);
+                frame.dispose();
+                startGame();
+            }
         }
     }
 }
