@@ -21,14 +21,16 @@ public class FreezeEnemiesPUTest {
         powerUp.addToPlayer(mockPlayer);
 
         // Verificar que los enemigos fueron congelados
-        verify(mockEnemy1).freeze();
-        verify(mockEnemy2).freeze();
+        verify(mockEnemy1).setCambioVelocidadTemp();
+        verify(mockEnemy1).setPixelsPerStep(0);
+        verify(mockEnemy2).setCambioVelocidadTemp();
+        verify(mockEnemy2).setPixelsPerStep(0);
 
         // Esperar 6 segundos
         Thread.sleep(6000);
 
-        // Verificar que fueron descongelados
-        verify(mockEnemy1).unfreeze();
-        verify(mockEnemy2).unfreeze();
+        // Verificar que se restauró la velocidad original
+        verify(mockEnemy1).clearCambioVelocidadTemp();
+        verify(mockEnemy2).clearCambioVelocidadTemp();
     }
 }
