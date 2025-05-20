@@ -1,7 +1,4 @@
 name: Test1 - Power Up
-description: Prueba
-author: José
-version: 1.0
 
 on: 
   push:
