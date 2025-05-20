@@ -35,9 +35,9 @@ public class BombermanComponent extends JComponent implements FloorListener
 
 	imageMap = new EnumMap<>(FloorTile.class);
 	try{
-		imageMap.put(FloorTile.FLOOR, ImageIO.read(getClass().getResource("/tiles/suelo.png")));
-		imageMap.put(FloorTile.UNBREAKABLEBLOCK, ImageIO.read(getClass().getResource("/tiles/pared.png")));
-		imageMap.put(FloorTile.BREAKABLEBLOCK, ImageIO.read(getClass().getResource("/tiles/breakableblock.png")));
+		imageMap.put(FloorTile.FLOOR, ImageIO.read(getClass().getResource("/Tiles/suelo.png")));
+		imageMap.put(FloorTile.UNBREAKABLEBLOCK, ImageIO.read(getClass().getResource("/Tiles/pared.png")));
+		imageMap.put(FloorTile.BREAKABLEBLOCK, ImageIO.read(getClass().getResource("/Tiles/breakableblock.png")));
 	} catch (IOException e) {
 		throw new RuntimeException(e);
 	}

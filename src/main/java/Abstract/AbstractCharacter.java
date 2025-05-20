@@ -18,7 +18,8 @@ public abstract class AbstractCharacter {
     private int x;
     private int y;
     private int pixelsPerStep;
-
+    private int originalSpeed;
+    private boolean cambioVelocidadTemp = false;
     /**
      * Crea un personaje con posición inicial y paso de movimiento definido.
      *
@@ -30,6 +31,7 @@ public abstract class AbstractCharacter {
         this.x = x;
         this.y = y;
         this.pixelsPerStep = pixelsPerStep;
+        this.originalSpeed = pixelsPerStep;
     }
 
     //Crear enum
@@ -118,5 +120,83 @@ public abstract class AbstractCharacter {
     public int getRowIndex() {
         return Floor.pixelToSquare(y);
     }
+
+   /**
+    * Modifica la velocidad actual de moviemiento del personaje
+    * @param pixelsPerStep velocidad que se desea asignar al personage(cantidad de pixeles por paso)
+    *
+   */
+    public void setPixelsPerStep(int pixelsPerStep) {
+        this.pixelsPerStep = pixelsPerStep;
+    }
+
+
+    /**
+     * Devuelve la velocidad actual del personaje
+     *
+     * @return devuelve la cantidad de pixeles que se mueve por paso
+     */
+    public int getPixelsPerStep() {
+        return pixelsPerStep;
+    }
+
+    /**
+     * Levanta la bandera de un cambio de velocidad temporal(CambioVelocidadTemp).
+     * Sirve para indicar si el personaje se encuentra bajo un cambio de velocidad temporal.
+     *
+     */
+
+    public void setCambioVelocidadTemp() {
+        cambioVelocidadTemp= true;
+    }
+
+    /**
+     * Baja la bandera de un cambio de velocidad temporal(CambioVelocidadTemp) y devuelve a la
+     * velocidad original al personaje.
+     *
+     */
+
+    public void clearCambioVelocidadTemp() {
+        cambioVelocidadTemp= false;
+        pixelsPerStep = originalSpeed;
+    }
+
+    /**
+     * Devuelve el estado de cambio de velocidad temporal
+     * @return un bool, si true hay un cambio de velocidad temporal, si es false, no hay cambio de velocidad temporal
+     *
+     */
+
+    public boolean getCambioVelocidadTemp() {
+        return cambioVelocidadTemp;
+    }
+
+
+    /**
+     * Cambia la velocidad del personaje permanentemente, si está bajo un cambio de velocidad temporal el cambio
+     * no cambia la velocidad actual del personaje, pero si ve el efecto cuando termine el cambio temporal.
+     * @param originalSpeed cantidad de pixeles que se mueve por paso
+     */
+
+    public void cambioPermanenteVelocidad(int originalSpeed) {
+        this.originalSpeed = originalSpeed;
+        if(!cambioVelocidadTemp) {
+            pixelsPerStep = originalSpeed;
+        }
+
+    }
+
+
+
+
+//
+//    public void freeze() {
+//        originalSpeed = pixelsPerStep;
+//        pixelsPerStep = 0;
+//    }
+//
+//    public void unfreeze() {
+//        pixelsPerStep = originalSpeed;
+//    }
 
 }
