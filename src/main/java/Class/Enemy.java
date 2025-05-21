@@ -7,7 +7,7 @@ public class Enemy extends AbstractCharacter
     private Move currentDirection;
 
     public Enemy(int x, int y, boolean vertical) {
-        super(x, y, 1);
+        super(x, y, 7);
         currentDirection = randomDirection(vertical);
     }
 

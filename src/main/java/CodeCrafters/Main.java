@@ -9,9 +9,9 @@ import Utils.MP3Player;
 
 public class Main{
     private static final int TIME_STEP = 30;
-    private static int width = 10;
-    private static int height = 10;
-    private static int nrOfEnemies = 5;
+    private static int width = 25;
+    private static int height = 15;
+    private static int nrOfEnemies = 10;
     private static Timer clockTimer = null;
     private static MP3Player music;
 
