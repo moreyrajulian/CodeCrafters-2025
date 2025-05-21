@@ -107,5 +107,7 @@ public class Player extends AbstractCharacter
 	floor.collisionWithPowerup();
 	floor.notifyListeners();
     }
-
+	public Floor getFloor() {
+		return floor;
+	}
 }
