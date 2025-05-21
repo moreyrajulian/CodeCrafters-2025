@@ -7,11 +7,12 @@ import Abstract.AbstractCharacter.Move;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import javax.sound.sampled.*;
 
 
 public class Floor {
     // Constants are static by definition.
-    private final static double CHANCE_FOR_BREAKABLE_BLOCK = 0.4;
+    private final static double CHANCE_FOR_BREAKABLE_BLOCK = 0.3;
     private final static double CHANCE_FOR_RADIUS_POWERUP = 0.2;
     private final static double CHANCE_FOR_COUNTER_POWERUP = 0.8;
     private final FloorTile[][] tiles;
@@ -162,7 +163,10 @@ public class Floor {
 		explosionsToBeRemoved.add(e);
 	    }
 	}
-	for (Explosion e: explosionsToBeRemoved){explosionCoords.remove(e);}
+	for (Explosion e: explosionsToBeRemoved){
+		explosionCoords.remove(e);
+		sonidodejuego("explosion.wav");
+	}
 
 	for (Bomb e: explosionList) {
 	    int eRow = e.getRowIndex();
@@ -203,6 +207,7 @@ public class Floor {
 	    for (Enemy e : enemyList) {
 		if(collidingCircles(e, squareToPixel(tup.getColIndex()), squareToPixel(tup.getRowIndex()))){
 		    enemiesToBeRemoved.add(e);
+			sonidodejuego("muerte_de_enemigo.wav");
 		}
 	    }
 	    for (Enemy e: enemiesToBeRemoved ) {
@@ -234,16 +239,22 @@ public class Floor {
 	tiles[2][1] = FloorTile.FLOOR;
     }
 
-    private void spawnPowerup (int rowIndex, int colIndex) {
-	double r = Math.random();
-	if (r < CHANCE_FOR_RADIUS_POWERUP) {
-	    powerupList.add(new BombRadiusPU(squareToPixel(rowIndex) + BombermanComponent.getSquareMiddle(), squareToPixel(colIndex) + BombermanComponent.getSquareMiddle()));
-	} else if (r > CHANCE_FOR_COUNTER_POWERUP) {
-	    powerupList.add(new BombCounterPU(squareToPixel(rowIndex) + BombermanComponent.getSquareMiddle(), squareToPixel(colIndex) + BombermanComponent.getSquareMiddle()));
-	}
-    }
+	private void spawnPowerup(int rowIndex, int colIndex) {
+		double r = Math.random();
+		int x = squareToPixel(colIndex) + BombermanComponent.getSquareMiddle();
+		int y = squareToPixel(rowIndex) + BombermanComponent.getSquareMiddle();
 
-    private void placeUnbreakableAndGrass () {
+		if (r < 0.3) {
+			powerupList.add(new BombRadiusPU(x, y));
+		} else if (r >= 0.3 && r < 0.6) {
+			powerupList.add(new BombCounterPU(x, y));
+		} else if (r >= 0.6 && r < 0.8) {
+			powerupList.add(new FreezeEnemiesPU(x, y));
+		}
+	}
+
+
+	private void placeUnbreakableAndGrass () {
 	for (int i = 0; i < height; i++) {
 	    for (int j = 0; j < width; j++) {
 		//Makes frame of unbreakable
@@ -284,6 +295,7 @@ public class Floor {
     public boolean collisionWithEnemies(){
 	for (Enemy enemy : enemyList) {
 	    if(collidingCircles(player, enemy.getX()-BombermanComponent.getSquareMiddle(), enemy.getY()-BombermanComponent.getSquareMiddle())){
+
 		return true;
 	    }
 	}
@@ -352,17 +364,21 @@ public class Floor {
 	}
     }
 
-    private boolean bombCoordinateCheck(int eRow, int eCol, boolean open){
-	if(tiles[eRow][eCol] != FloorTile.FLOOR){open = false;}
-	if(tiles[eRow][eCol] == FloorTile.BREAKABLEBLOCK){
-	    tiles[eRow][eCol] = FloorTile.FLOOR;
-	    spawnPowerup(eRow, eCol);
-	}
-	if(tiles[eRow][eCol] != FloorTile.UNBREAKABLEBLOCK){explosionCoords.add(new Explosion(eRow, eCol));}
-	return open;
-    }
+	private boolean bombCoordinateCheck(int eRow, int eCol, boolean open) {
+		if (tiles[eRow][eCol] == FloorTile.BREAKABLEBLOCK) {
+			tiles[eRow][eCol] = FloorTile.FLOOR;
+			spawnPowerup(eRow, eCol);
+		}
 
-    private boolean collidingCircles(AbstractCharacter abstractCharacter, int x, int y){
+		if (tiles[eRow][eCol] != FloorTile.UNBREAKABLEBLOCK) {
+			explosionCoords.add(new Explosion(eRow, eCol));
+		}
+
+		return tiles[eRow][eCol] == FloorTile.FLOOR ? open : false;
+	}
+
+
+	private boolean collidingCircles(AbstractCharacter abstractCharacter, int x, int y){
 	int a = abstractCharacter.getX() - x - BombermanComponent.getSquareMiddle();
 	int b = abstractCharacter.getY() - y - BombermanComponent.getSquareMiddle();
 	int a2 = a * a;
@@ -395,4 +411,17 @@ public class Floor {
 
 	return (cornerDistance <= (circleRadius^2));
     }
+
+	public void sonidodejuego(String fileName) {
+		try {
+			AudioInputStream audioIn = AudioSystem.getAudioInputStream(getClass().getResource("/sounds/" + fileName));
+			Clip clip = AudioSystem.getClip();
+			clip.open(audioIn);
+			clip.start(); // Se reproduce una vez
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+
 }

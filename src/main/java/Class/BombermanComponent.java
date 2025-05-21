@@ -126,14 +126,27 @@ public class BombermanComponent extends JComponent implements FloorListener
 		}
 
 		//Paint powerups
-		for (AbstractPowerUp p: floor.getPowerupList()) {
-			if (p.getName().equals("BombCounter")) {
-			g2d.setColor(Color.BLACK);
-			} else if (p.getName().equals("BombRadius")) {
-			g2d.setColor(Color.RED);
+		for (AbstractPowerUp p : floor.getPowerupList()) {
+			switch (p.getName()) {
+				case "BombCounter":
+					g2d.setColor(Color.BLACK); // ⚫
+					break;
+				case "BombRadius":
+					g2d.setColor(Color.RED);   // 🔴
+					break;
+				case "FreezeEnemies":
+					g2d.setColor(Color.GREEN); // 🟢 o podés usar Color.WHITE
+					break;
 			}
-			g2d.fillOval(p.getX()-CHARACTER_ADJUSTMENT_FOR_PAINT, p.getY()-CHARACTER_ADJUSTMENT_FOR_PAINT, p.getPowerUpSize(), p.getPowerUpSize());
+
+			g2d.fillOval(
+					p.getX() - CHARACTER_ADJUSTMENT_FOR_PAINT,
+					p.getY() - CHARACTER_ADJUSTMENT_FOR_PAINT,
+					p.getPowerUpSize(),
+					p.getPowerUpSize()
+			);
 		}
+
 
 		//Paint bombs
 		for (Bomb b: floor.getBombList()) {
@@ -147,10 +160,28 @@ public class BombermanComponent extends JComponent implements FloorListener
 
 		//Paint explosions
 		g2d.setColor(Color.ORANGE);
-		for (Explosion tup: floor.getExplosionCoords()) {
-			g2d.fillOval(floor.squareToPixel(tup.getColIndex()) + BOMB_ADJUSTMENT_1, floor.squareToPixel(tup.getRowIndex()) +
-												 BOMB_ADJUSTMENT_1, Bomb.getBOMBSIZE(), Bomb.getBOMBSIZE());
-		}
+        //AGREGUE ANIMACION EN LA EXPLOSIONES
+        for (Explosion tup: floor.getExplosionCoords()) {
+            Color fireColor = new Color(
+                    255,
+                    (int)(Math.random() * 150),
+                    0
+            ); // naranja variable
+            g2d.setColor(fireColor);
+            g2d.fillOval(
+                    floor.squareToPixel(tup.getColIndex()) + 5,
+                    floor.squareToPixel(tup.getRowIndex()) + 5,
+                    Bomb.getBOMBSIZE(),
+                    Bomb.getBOMBSIZE()
+            );
+        }
+
+        //Muestra cuantos enemigos quedan en pantalla
+        g2d.setColor(Color.BLACK);
+        g2d.setFont(new Font("Arial", Font.BOLD, 14));
+        g2d.drawString("Enemigos restantes: " + floor.getEnemyList().size(), 10, 20);
+
+
     }
 
     private void paintBreakableBlock(int rowIndex, int colIndex, Graphics g2d){

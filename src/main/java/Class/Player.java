@@ -10,7 +10,7 @@ public class Player extends AbstractCharacter
 
     private final static int PLAYER_START_X = 60;
     private final static int PLAYER_START_Y = 60;
-    private final static int PLAYER_PIXELS_BY_STEP = 4;
+    private final static int PLAYER_PIXELS_BY_STEP = 6;
     private int explosionRadius;
     private int bombCount;
     private Floor floor;
