@@ -1,3 +1,8 @@
+java {
+    sourceSets["main"].java.srcDirs("src/main/java")
+    sourceSets["test"].java.srcDirs("src/test/java")
+}
+
 plugins {
     id("java")
 }
@@ -10,12 +15,13 @@ repositories {
 }
 
 dependencies {
-    testImplementation(platform("org.junit:junit-bom:5.10.0"))
-    testImplementation("org.junit.jupiter:junit-jupiter")
+    //testImplementation(platform("org.junit:junit-bom:5.10.0"))
+    testImplementation("org.junit.jupiter:junit-jupiter:5.10.0")
 
     implementation("javazoom:jlayer:1.0.1")
 
     testImplementation("org.mockito:mockito-core:5.17.0")
+    testImplementation("org.mockito:mockito-junit-jupiter:5.17.0")
 
 }
 
