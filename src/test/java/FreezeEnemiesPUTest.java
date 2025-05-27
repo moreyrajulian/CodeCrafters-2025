@@ -1,7 +1,6 @@
-package Class;
-
 import org.junit.jupiter.api.Test;
 import static org.mockito.Mockito.*;
+import Class.*;
 
 public class FreezeEnemiesPUTest {
 
