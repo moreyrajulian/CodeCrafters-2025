@@ -1,6 +1,7 @@
-package Class;
+package Domain;
 
-import Abstract.*;
+import Presentation.View.BombermanComponent;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 

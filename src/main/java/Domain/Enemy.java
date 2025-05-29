@@ -1,6 +1,4 @@
-package Class;
-import Abstract.*;
-
+package Domain;
 
 public class Enemy extends AbstractCharacter
 {

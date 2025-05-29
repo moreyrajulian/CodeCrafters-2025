@@ -1,5 +1,4 @@
-package Abstract;
-import Class.*;
+package Domain;
 
 /**
  * Clase abstracta que representa un personaje dentro del juego.

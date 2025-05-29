@@ -1,4 +1,4 @@
-package Class;
+package Domain;
 
 /**
  *  This enum represents the different types of components the floor can have.

@@ -1,9 +1,8 @@
-package Class;
+package Domain;
 
-import Abstract.*;
 
-import Abstract.AbstractCharacter.Move;
-
+import Presentation.View.BombermanComponent;
+import Domain.AbstractCharacter.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -294,7 +293,7 @@ public class Floor {
 
     public boolean collisionWithEnemies(){
 	for (Enemy enemy : enemyList) {
-	    if(collidingCircles(player, enemy.getX()-BombermanComponent.getSquareMiddle(), enemy.getY()-BombermanComponent.getSquareMiddle())){
+	    if(collidingCircles(player, enemy.getX()- BombermanComponent.getSquareMiddle(), enemy.getY()- BombermanComponent.getSquareMiddle())){
 
 		return true;
 	    }
@@ -334,7 +333,7 @@ public class Floor {
 
     public void collisionWithPowerup() {
 	for (AbstractPowerUp powerup : powerupList) {
-	    if(collidingCircles(player, powerup.getX()-BombermanComponent.getSquareMiddle(), powerup.getY()-BombermanComponent.getSquareMiddle())){
+	    if(collidingCircles(player, powerup.getX()- BombermanComponent.getSquareMiddle(), powerup.getY()- BombermanComponent.getSquareMiddle())){
 		powerup.addToPlayer(player);
 		powerupList.remove(powerup);
 		break;
