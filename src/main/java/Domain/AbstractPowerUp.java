@@ -1,6 +1,4 @@
-package Abstract;
-
-import Class.Player;
+package Domain;
 
 /**
  * Clase abstracta que representa un PowerUp dentro del juego.

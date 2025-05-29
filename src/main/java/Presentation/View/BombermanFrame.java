@@ -1,5 +1,7 @@
-package Class;
+package Presentation.View;
 
+import Domain.Floor;
+import Domain.FloorListener;
 
 import javax.swing.*;
 import java.awt.*;
@@ -27,8 +29,8 @@ public class BombermanFrame extends JFrame
 		this.setVisible(true);
     }
 
-    public BombermanComponent getBombermanComponent() {
-	return bombermanComponent;
+    public FloorListener getBombermanComponent() {
+		return bombermanComponent;
     }
 
     private boolean askUser(String question) {

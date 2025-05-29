@@ -1,13 +1,14 @@
-package CodeCrafters;
+package GameLauncher;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
-import Class.*;
-import Abstract.*;
+
+import Domain.*;
+import Presentation.View.*;
 import Utils.MP3Player;
 
 
-public class Main{
+public class GameLauncher {
     private static final int TIME_STEP = 30;
     private static int width = 25;
     private static int height = 15;

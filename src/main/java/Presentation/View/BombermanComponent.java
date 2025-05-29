@@ -1,6 +1,6 @@
-package Class;
+package Presentation.View;
 
-import Abstract.*;
+import Domain.*;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -95,14 +95,14 @@ public class BombermanComponent extends JComponent implements FloorListener
 				//g2d.setColor(imageMap.get(this.floor.getFloorTile(rowIndex, colIndex)));//Aca le cargo la pintura segun el mapa de colores
 
 				//Si el bloque en [rowIndex][colIndex] es "rompible" llama a paintBreakableBlock
-				if(floor.getFloorTile(rowIndex, colIndex)==FloorTile.BREAKABLEBLOCK){
+				if(floor.getFloorTile(rowIndex, colIndex)== FloorTile.BREAKABLEBLOCK){
 					//paintBreakableBlock(rowIndex, colIndex, g2d);
 					if (img != null) {
 						g2d.drawImage(img, colIndex * SQUARE_SIZE, rowIndex * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE, null);
 					}
 				}
 				//Si el bloque en [rowIndex][colIndex] es "irrompible" llama a paintUnbreakableBlock
-				else if(floor.getFloorTile(rowIndex, colIndex)==FloorTile.UNBREAKABLEBLOCK){
+				else if(floor.getFloorTile(rowIndex, colIndex)== FloorTile.UNBREAKABLEBLOCK){
 					//paintUnbreakableBlock(rowIndex, colIndex, g2d);
 					if (img != null) {
 						g2d.drawImage(img, colIndex * SQUARE_SIZE, rowIndex * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE, null);

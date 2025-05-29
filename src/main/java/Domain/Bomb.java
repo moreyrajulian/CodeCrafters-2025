@@ -1,4 +1,4 @@
-package Class;
+package Domain;
 
 public class Bomb
 {
