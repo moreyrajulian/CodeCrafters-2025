@@ -1,8 +1,6 @@
-name: Test1 - Power Up
+name: Test unitarios por clase
 
-on: 
-  push:
-    branches: [ develop ]  
+on:
   pull_request:
     branches: [ develop ]
 
