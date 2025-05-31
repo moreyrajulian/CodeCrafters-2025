@@ -1,7 +1,7 @@
-import Domain.Enemy;
-import Domain.Floor;
-import Domain.FreezeEnemiesPU;
-import Domain.Player;
+import Presentation.Model.Enemy;
+import Presentation.Floor;
+import Presentation.FreezeEnemiesPU;
+import Presentation.Player;
 import org.junit.jupiter.api.Test;
 import static org.mockito.Mockito.*;
 

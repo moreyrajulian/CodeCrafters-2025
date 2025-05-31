@@ -1,8 +1,9 @@
-package Domain;
+package Presentation;
 
 
-import Presentation.View.BombermanComponent;
-import Domain.AbstractCharacter.*;
+import Presentation.Model.*;
+import Presentation.Model.AbstractCharacter.*;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;

@@ -1,6 +1,9 @@
-package Presentation.View;
+package Presentation;
 
-import Domain.*;
+import Presentation.Model.AbstractPowerUp;
+import Presentation.Model.Bomb;
+import Presentation.Model.Enemy;
+import Presentation.Model.Explosion;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;

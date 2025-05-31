@@ -1,4 +1,4 @@
-import Domain.Bomb;
+import Presentation.Model.Bomb;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

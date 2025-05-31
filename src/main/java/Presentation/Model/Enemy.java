@@ -1,4 +1,4 @@
-package Domain;
+package Presentation.Model;
 
 public class Enemy extends AbstractCharacter
 {

@@ -1,7 +1,4 @@
-package Presentation.View;
-
-import Domain.Floor;
-import Domain.FloorListener;
+package Presentation;
 
 import javax.swing.*;
 import java.awt.*;
