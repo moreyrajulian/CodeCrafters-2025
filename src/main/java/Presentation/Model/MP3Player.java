@@ -1,4 +1,4 @@
-package Presentation;
+package Presentation.Model;
 
 import javazoom.jl.player.Player;
 

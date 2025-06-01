@@ -1,8 +1,9 @@
-package Presentation;
+package Presentation.Controller;
 
 
 import Presentation.Model.*;
 import Presentation.Model.AbstractCharacter.*;
+import Presentation.View.BombermanComponent;
 
 import java.util.ArrayList;
 import java.util.Collection;

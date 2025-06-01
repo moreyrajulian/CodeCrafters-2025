@@ -1,7 +1,7 @@
-package Presentation;
+package Presentation.Model;
 
-import Presentation.Model.AbstractCharacter;
-import Presentation.Model.Bomb;
+import Presentation.Controller.Floor;
+import Presentation.View.BombermanComponent;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

@@ -1,7 +1,5 @@
 package Presentation.Model;
 
-import Presentation.Player;
-
 /**
  * Clase abstracta que representa un PowerUp dentro del juego.
  * <p>

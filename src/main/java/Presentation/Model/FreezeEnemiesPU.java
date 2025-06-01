@@ -1,7 +1,6 @@
-package Presentation;
+package Presentation.Model;
 
-import Presentation.Model.AbstractPowerUp;
-import Presentation.Model.Enemy;
+import Presentation.Controller.Floor;
 
 import java.util.Timer;
 import java.util.TimerTask; // Importar TimerTask
@@ -17,7 +16,7 @@ public class FreezeEnemiesPU extends AbstractPowerUp {
 private static final int duracion = 5000;
 
     /**
-     * Constructor del PowerUp Presentation.FreezeEnemiesPU que define su posición.
+     * Constructor del PowerUp Presentation.Model.FreezeEnemiesPU que define su posición.
      *
      * @param x Posición en X donde aparece el PowerUp.
      * @param y Posición en Y donde aparece el PowerUp.

@@ -1,6 +1,4 @@
-package Presentation;
-
-import Presentation.Model.AbstractPowerUp;
+package Presentation.Model;
 
 /**
  * This class extends AbstractPowerup and receives fundamental methods such as getters for its coordinates and size. This class
