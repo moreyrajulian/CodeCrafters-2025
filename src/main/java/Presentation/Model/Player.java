@@ -2,6 +2,7 @@ package Presentation.Model;
 
 import Presentation.Controller.Floor;
 import Presentation.View.BombermanComponent;
+import Presentation.Controller.PlayerController;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -16,7 +17,7 @@ public class Player extends AbstractCharacter
     private int explosionRadius;
     private int bombCount;
     private Floor floor;
- 
+	private PlayerController playerController;
     public Action up = new AbstractAction() {
 	public void actionPerformed(ActionEvent e) {
 	    movePlayer(Move.UP);
@@ -45,23 +46,21 @@ public class Player extends AbstractCharacter
 	}
     };
 
-   
-    public Action dropBomb = new AbstractAction()
-    {
-	public void actionPerformed(ActionEvent e) {
-	    if(!floor.squareHasBomb(getRowIndex(), getColIndex()) && floor.getBombListSize() < getBombCount()){
-		floor.addToBombList(new Bomb(getRowIndex(), getColIndex(), getExplosionRadius()));
-	    }
-	    floor.notifyListeners();
-	}
-    };
+
+	public Action dropBomb = new AbstractAction() {
+		public void actionPerformed(ActionEvent e) {
+			playerController.dropBomb(getRowIndex(), getColIndex(), getExplosionRadius(), getBombCount());
+		}
+	};
 
     public Player(BombermanComponent bombermanComponent, Floor floor) {
 	super(PLAYER_START_X, PLAYER_START_Y, PLAYER_PIXELS_BY_STEP);
 	explosionRadius = 1;
 	bombCount = 1;
 	this.floor = floor;
+		this.playerController = new PlayerController(this, floor);
 	setPlayerButtons(bombermanComponent);
+
     }
 
     public void setPlayerButtons(BombermanComponent bombermanComponent){
@@ -94,20 +93,7 @@ public class Player extends AbstractCharacter
     }
 
     private void movePlayer(Move move) {
-	move(move);
-	if(floor.collisionWithBlock(this)){
-	    moveBack(move);
-	}
-	if(floor.collisionWithBombs(this)){
-	    moveBack(move);
-	}
-	if(floor.collisionWithEnemies()){
-	    floor.setIsGameOver(true);
-	}
-
-	floor.checkIfPlayerLeftBomb();
-	floor.collisionWithPowerup();
-	floor.notifyListeners();
+	playerController.movePlayer(move);
     }
 	public Floor getFloor() {
 		return floor;
