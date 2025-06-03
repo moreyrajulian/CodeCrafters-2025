@@ -1,6 +1,13 @@
 package Presentation.View;
 
-import Domain.*;
+import Presentation.Controller.Floor;
+import Presentation.Controller.FloorListener;
+import Presentation.Model.FloorTile;
+import Presentation.Model.AbstractPowerUp;
+import Presentation.Model.Bomb;
+import Presentation.Model.Enemy;
+import Presentation.Model.Explosion;
+import Presentation.Model.Player;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;

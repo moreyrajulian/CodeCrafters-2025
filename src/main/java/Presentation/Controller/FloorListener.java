@@ -1,4 +1,4 @@
-package Domain;
+package Presentation.Controller;
 
 /**
  * This Interface class is excluded to one method, floorChanged which is implemented in Presentation.View.BombermanComponent

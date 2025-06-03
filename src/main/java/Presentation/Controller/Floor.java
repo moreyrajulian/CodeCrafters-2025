@@ -1,8 +1,10 @@
-package Domain;
+package Presentation.Controller;
 
 
+import Presentation.Model.*;
+import Presentation.Model.AbstractCharacter.*;
 import Presentation.View.BombermanComponent;
-import Domain.AbstractCharacter.*;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -330,6 +332,7 @@ public class Floor {
 	}
 	return false;
     }
+
 
     public void collisionWithPowerup() {
 	for (AbstractPowerUp powerup : powerupList) {

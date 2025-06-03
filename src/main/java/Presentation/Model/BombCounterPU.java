@@ -1,9 +1,5 @@
-package Domain;
+package Presentation.Model;
 
-/**
- * This class extends AbstractPowerup and receives fundamental methods such as getters for its coordinates and size. This class
- * has an addToPlayer-method which adjusts the bombCount of the player.
- */
 public class BombCounterPU extends AbstractPowerUp
 {
 
@@ -11,6 +7,11 @@ public class BombCounterPU extends AbstractPowerUp
 	super(colIndex, rowIndex);
     }
 
+    /**
+     * Aumenta la capacidad de bombas en +1 según su capacidad anterior
+     * @param player el jugador que recibe el PowerUp
+     */
+    @Override
     public void addToPlayer(Player player) {
 	    int currentBombCount = player.getBombCount();
         player.setBombCount(currentBombCount + 1);

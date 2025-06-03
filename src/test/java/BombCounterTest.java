@@ -1,5 +1,5 @@
-import Domain.BombCounterPU;
-import Domain.Player;
+import Presentation.Model.BombCounterPU;
+import Presentation.Model.Player;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

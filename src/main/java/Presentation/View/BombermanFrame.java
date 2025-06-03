@@ -1,7 +1,7 @@
 package Presentation.View;
 
-import Domain.Floor;
-import Domain.FloorListener;
+import Presentation.Controller.Floor;
+import Presentation.Controller.FloorListener;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,7 +11,7 @@ import java.awt.event.KeyEvent;
 //Un JFrame es una ventana de Java Swing
 public class BombermanFrame extends JFrame
 {
-    private Floor floor; 
+    private Floor floor;
     private BombermanComponent bombermanComponent;
 
     public BombermanFrame(final String title, Floor floor) throws HeadlessException {

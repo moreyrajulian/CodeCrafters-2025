@@ -3,9 +3,9 @@ package GameLauncher;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 
-import Domain.*;
-import Presentation.View.*;
-import Utils.MP3Player;
+import Presentation.View.BombermanFrame;
+import Presentation.Controller.Floor;
+import Presentation.Model.MP3Player;
 
 
 public class GameLauncher {

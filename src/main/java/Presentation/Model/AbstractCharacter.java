@@ -1,4 +1,6 @@
-package Domain;
+package Presentation.Model;
+
+import Presentation.Controller.Floor;
 
 /**
  * Clase abstracta que representa un personaje dentro del juego.
