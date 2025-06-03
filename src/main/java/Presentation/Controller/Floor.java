@@ -333,6 +333,7 @@ public class Floor {
 	return false;
     }
 
+
     public void collisionWithPowerup() {
 	for (AbstractPowerUp powerup : powerupList) {
 	    if(collidingCircles(player, powerup.getX()- BombermanComponent.getSquareMiddle(), powerup.getY()- BombermanComponent.getSquareMiddle())){

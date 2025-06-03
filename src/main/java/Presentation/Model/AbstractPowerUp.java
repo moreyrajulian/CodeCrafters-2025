@@ -33,8 +33,7 @@ public abstract class AbstractPowerUp {
      *
      * @param player el jugador que recibe el PowerUp
      */
-    public void addToPlayer(Player player) {
-    }
+    public abstract void addToPlayer(Player player);
 
     /**
      * Devuelve el tamaño estándar del PowerUp en píxeles.

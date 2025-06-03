@@ -11,9 +11,14 @@ public class BombRadiusPU extends AbstractPowerUp
 	super(colIndex, rowIndex);
     }
 
+    /**
+     * Aumenta el radio de explosion en +1 según el radio anterior
+     * @param player el jugador que recibe el PowerUp
+     */
+    @Override
     public void addToPlayer(Player player) {
-	int currentExplosionRadius = player.getExplosionRadius();
-	player.setExplosionRadius(currentExplosionRadius + 1);
+	    int currentExplosionRadius = player.getExplosionRadius();
+	    player.setExplosionRadius(currentExplosionRadius + 1);
     }
 
     public String getName() {
