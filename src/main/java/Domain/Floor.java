@@ -25,15 +25,23 @@ public class Floor {
     private Collection<Bomb> explosionList= new ArrayList<>();
     private Collection<Explosion> explosionCoords= new ArrayList<>();
     private boolean isGameOver = false;
+	private static Floor instance;
 
-    public Floor(int width, int height, int nrOfEnemies) {
-	this.width = width;
-	this.height = height;
-	this.tiles = new FloorTile[height][width];
-	placeBreakable();
-	placeUnbreakableAndGrass();
-	spawnEnemies(nrOfEnemies);
+    private Floor(int width, int height, int nrOfEnemies) {
+		this.width = width;
+		this.height = height;
+		this.tiles = new FloorTile[height][width];
+		placeBreakable();
+		placeUnbreakableAndGrass();
+		spawnEnemies(nrOfEnemies);
     }
+
+	public static Floor getInstance(int width, int height, int nrOfEnemies) {
+		if (instance == null) {
+			instance = new Floor(width, height, nrOfEnemies);
+		}
+		return instance;
+	}
 
     public static int pixelToSquare(int pixelCoord){
 	return ((pixelCoord + BombermanComponent.getSquareSize()-1) / BombermanComponent.getSquareSize())-1;
@@ -245,9 +253,9 @@ public class Floor {
 
 		if (r < 0.3) {
 			powerupList.add(new BombRadiusPU(x, y));
-		} else if (r >= 0.3 && r < 0.6) {
+		} else if (r < 0.6) {
 			powerupList.add(new BombCounterPU(x, y));
-		} else if (r >= 0.6 && r < 0.8) {
+		} else if (r < 0.8) {
 			powerupList.add(new FreezeEnemiesPU(x, y));
 		}
 	}

@@ -10,9 +10,9 @@ import Utils.MP3Player;
 
 public class GameLauncher {
     private static final int TIME_STEP = 30;
-    private static int width = 25;
-    private static int height = 15;
-    private static int nrOfEnemies = 10;
+    private static final int width = 25;
+    private static final int height = 15;
+    private static final int nrOfEnemies = 10;
     private static Timer clockTimer = null;
     private static MP3Player music;
 
@@ -22,7 +22,7 @@ public class GameLauncher {
     }
 
     public static void startGame() {
-        Floor floor = new Floor(width, height, nrOfEnemies);
+        Floor floor = Floor.getInstance(width, height, nrOfEnemies);
         BombermanFrame frame = new BombermanFrame("Bomberman", floor);
         frame.setLocationRelativeTo(null);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
