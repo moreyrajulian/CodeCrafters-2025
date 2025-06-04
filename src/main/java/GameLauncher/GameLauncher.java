@@ -21,15 +21,19 @@ public class GameLauncher {
 
     public static void startGame() {
         Floor floor = Floor.getInstance(width, height, nrOfEnemies);
+        System.out.println("Se creo el floor con patron singleton");
         BombermanFrame frame = new BombermanFrame("Bomberman", floor);
         frame.setLocationRelativeTo(null);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         floor.addFloorListener(frame.getBombermanComponent());
+        System.out.println("Se termino de crear el frame");
+
 
         Action doOneStep = new AbstractAction()
         {
             public void actionPerformed(ActionEvent e) {
                 tick(frame, floor);
+                System.out.println("Se crea el actionPerfomed");
             }
         };
         clockTimer = new Timer(TIME_STEP, doOneStep);
@@ -37,17 +41,19 @@ public class GameLauncher {
         clockTimer.start();
         music = new MP3Player("background.mp3");
         music.start();
-
     }
 
     private static void gameOver(BombermanFrame frame, Floor floor) {
+        System.out.println("Entro a gameOver");
+        //floor.setIsGameOver(true);
         if(music!=null){
             music.stop();
         }
         clockTimer.stop();
         JOptionPane.showMessageDialog(null, "¡Game Over!", "Fin del juego", JOptionPane.INFORMATION_MESSAGE);
         frame.dispose();
-        //startGame();
+        //floor.setIsGameOver(false);
+        startGame();
     }
 
     private static void tick(BombermanFrame frame, Floor floor) {

@@ -304,7 +304,6 @@ public class Floor {
 	public boolean collisionWithEnemies(){
 		for (Enemy enemy : enemyList) {
 			if(collidingCircles(player, enemy.getX()- BombermanComponent.getSquareMiddle(), enemy.getY()- BombermanComponent.getSquareMiddle())){
-
 				return true;
 			}
 		}
