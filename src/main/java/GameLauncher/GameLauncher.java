@@ -7,7 +7,6 @@ import Presentation.Controller.Floor;
 import Presentation.View.*;
 import Presentation.Model.MP3Player;
 
-
 public class GameLauncher {
     private static final int TIME_STEP = 30;
     private static final int width = 25;
@@ -15,7 +14,6 @@ public class GameLauncher {
     private static final int nrOfEnemies = 1;
     private static Timer clockTimer = null;
     private static MP3Player music;
-
 
     public static void main(String[] args) {
         startGame();
