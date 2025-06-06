@@ -1,4 +1,5 @@
 import Presentation.Model.Bomb;
+import Presentation.Model.Strategy.ExplosionNormal;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -9,7 +10,7 @@ class BombTest {
 
     @BeforeEach
     void setUp() {
-        bomb = new Bomb(5, 10, 3);
+        bomb = new Bomb(5, 10, 3, new ExplosionNormal());
     }
 
     @Test

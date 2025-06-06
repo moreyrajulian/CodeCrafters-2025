@@ -1,8 +1,10 @@
 package Presentation.Model;
 
+import Presentation.Model.Strategy.ExplosionAmpliada;
+
 /**
- * This class extends AbstractPowerup and receives fundamental methods such as getters for its coordinates and size. This class
- * has an addToPlayer-method which adjusts the bombRadius of the player.
+ * Esta clase extiende de AbstractPowerup y recibe metodos fundamentales como getters para sus coordenadas y tamaño. Esta clase
+ * tiene un addToPlayer-method el cual ajusta el bombRadius del jugador.
  */
 public class BombRadiusPU extends AbstractPowerUp
 {
@@ -17,12 +19,10 @@ public class BombRadiusPU extends AbstractPowerUp
      */
     @Override
     public void addToPlayer(Player player) {
-	    int currentExplosionRadius = player.getExplosionRadius();
-	    player.setExplosionRadius(currentExplosionRadius + 1);
+        player.setExplosionStrategy(new ExplosionAmpliada());
     }
 
     public String getName() {
-	final String name = "BombRadius";
-	return name;
+        return "ExplosionAmpliada";
     }
 }

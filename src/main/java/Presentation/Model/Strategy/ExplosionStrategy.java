@@ -1,7 +1,8 @@
 package Presentation.Model.Strategy;
 
-import Presentation.Model.Explosion;
+import Presentation.Controller.Floor;
+import Presentation.Model.Bomb;
 
 public interface ExplosionStrategy {
-     void explotar(Explosion explosion);
+     void explode(Bomb bomb, Floor floor);
 }

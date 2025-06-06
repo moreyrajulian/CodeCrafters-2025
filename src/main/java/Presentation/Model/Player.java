@@ -1,6 +1,7 @@
 package Presentation.Model;
 
 import Presentation.Controller.Floor;
+import Presentation.Model.Strategy.ExplosionStrategy;
 import Presentation.View.BombermanComponent;
 import Presentation.Controller.PlayerController;
 
@@ -18,6 +19,8 @@ public class Player extends AbstractCharacter
     private int bombCount;
     private Floor floor;
 	private PlayerController playerController;
+	private ExplosionStrategy explosionStrategy;
+
     public Action up = new AbstractAction() {
 	public void actionPerformed(ActionEvent e) {
 	    movePlayer(Move.UP);
@@ -53,15 +56,23 @@ public class Player extends AbstractCharacter
 		}
 	};
 
-    public Player(BombermanComponent bombermanComponent, Floor floor) {
+    public Player(BombermanComponent bombermanComponent, Floor floor, ExplosionStrategy explosionStrategy) {
 	super(PLAYER_START_X, PLAYER_START_Y, PLAYER_PIXELS_BY_STEP);
 	explosionRadius = 1;
 	bombCount = 1;
 	this.floor = floor;
 		this.playerController = new PlayerController(this, floor);
 	setPlayerButtons(bombermanComponent);
-
+	this.explosionStrategy = explosionStrategy;
     }
+
+	public void setExplosionStrategy(ExplosionStrategy strategy) {
+		this.explosionStrategy = strategy;
+	}
+
+	public ExplosionStrategy getExplosionStrategy() {
+		return explosionStrategy;
+	}
 
     public void setPlayerButtons(BombermanComponent bombermanComponent){
 	bombermanComponent.getInputMap().put(KeyStroke.getKeyStroke("RIGHT"), "moveRight");
@@ -95,6 +106,7 @@ public class Player extends AbstractCharacter
     private void movePlayer(Move move) {
 	playerController.movePlayer(move);
     }
+
 	public Floor getFloor() {
 		return floor;
 	}

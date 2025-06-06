@@ -1,21 +1,21 @@
 package GameLauncher;
 
-import javax.swing.*;
-import java.awt.event.ActionEvent;
-
-import Presentation.View.BombermanFrame;
 import Presentation.Controller.Floor;
 import Presentation.Model.MP3Player;
+import Presentation.Model.Strategy.ExplosionNormal;
+import Presentation.View.BombermanFrame;
+
+import javax.swing.*;
+import java.awt.event.ActionEvent;
 
 
 public class GameLauncher {
     private static final int TIME_STEP = 30;
     private static int width = 25;
     private static int height = 15;
-    private static int nrOfEnemies = 10;
+    private static int nrOfEnemies = 1;
     private static Timer clockTimer = null;
     private static MP3Player music;
-
 
     public static void main(String[] args) {
         startGame();
@@ -23,7 +23,7 @@ public class GameLauncher {
 
     public static void startGame() {
         Floor floor = new Floor(width, height, nrOfEnemies);
-        BombermanFrame frame = new BombermanFrame("Bomberman", floor);
+        BombermanFrame frame = new BombermanFrame("Bomberman", floor, new ExplosionNormal());
         frame.setLocationRelativeTo(null);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         floor.addFloorListener(frame.getBombermanComponent());

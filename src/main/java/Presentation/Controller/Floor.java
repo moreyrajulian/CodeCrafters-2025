@@ -2,13 +2,16 @@ package Presentation.Controller;
 
 
 import Presentation.Model.*;
-import Presentation.Model.AbstractCharacter.*;
+import Presentation.Model.AbstractCharacter.Move;
+import Presentation.Model.Strategy.ExplosionStrategy;
 import Presentation.View.BombermanComponent;
 
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import javax.sound.sampled.*;
 
 
 public class Floor {
@@ -89,8 +92,8 @@ public class Floor {
 	bombList.add(bomb);
     }
 
-    public void createPlayer(BombermanComponent bombermanComponent, Floor floor){
-	player = new Player(bombermanComponent, floor);
+    public void createPlayer(BombermanComponent bombermanComponent, Floor floor, ExplosionStrategy strategy){
+		player = new Player(bombermanComponent, floor, strategy);
     }
 
     public int squareToPixel(int squareCoord){
@@ -129,7 +132,7 @@ public class Floor {
     }
 
     public void addFloorListener(FloorListener bl) {
-	floorListeners.add(bl);
+		floorListeners.add(bl);
     }
 
     public void notifyListeners() {
@@ -141,7 +144,7 @@ public class Floor {
     /**
      * This method creates a bomb if the given demands are satisfied.
      */
-    public void bombCountdown(){
+    public void bombCountdown() {
 	Collection<Integer> bombIndexesToBeRemoved = new ArrayList<>();
 	explosionList.clear();
 	int index = 0;
@@ -156,9 +159,9 @@ public class Floor {
 	for (int i: bombIndexesToBeRemoved){bombList.remove(i);}
     }
 
-    public void explosionHandler(){
+    public void explosionHandler() {
 	Collection<Explosion> explosionsToBeRemoved = new ArrayList<>();
-	for (Explosion e:explosionCoords) {
+	for (Explosion e: explosionCoords) {
 	    e.setDuration(e.getDuration()-1);
 	    if(e.getDuration()==0){
 		explosionsToBeRemoved.add(e);
@@ -169,32 +172,21 @@ public class Floor {
 		sonidodejuego("explosion.wav");
 	}
 
-	for (Bomb e: explosionList) {
-	    int eRow = e.getRowIndex();
-	    int eCol = e.getColIndex();
-	    boolean northOpen = true;
-	    boolean southOpen = true;
-	    boolean westOpen = true;
-	    boolean eastOpen = true;
-	    explosionCoords.add(new Explosion(eRow, eCol));
-	    for (int i = 1; i < e.getExplosionRadius()+1; i++) {
-		if (eRow - i >= 0 && northOpen) {
-		    northOpen = bombCoordinateCheck(eRow-i, eCol, northOpen);
-		}
-		if (eRow - i <= height && southOpen) {
-		    southOpen = bombCoordinateCheck(eRow+i, eCol, southOpen);
-		}
-		if (eCol - i >= 0 && westOpen) {
-		    westOpen = bombCoordinateCheck(eRow, eCol-i, westOpen);
-		}
-		if (eCol + i <= width && eastOpen) {
-		    eastOpen = bombCoordinateCheck(eRow, eCol+i, eastOpen);
-		}
-	    }
+	for (Bomb bomb: explosionList) {
+		bomb.explode(this);
 	}
     }
 
-    public void playerInExplosion(){
+	public void addExplosion(Explosion explosion) {
+		explosionCoords.add(explosion);
+	}
+
+	public void breakBlock(int row, int col) {
+		tiles[row][col] = FloorTile.FLOOR;
+		spawnPowerup(row, col);
+	}
+
+    public void playerInExplosion() {
 	for (Explosion tup:explosionCoords) {
 	    if(collidingCircles(player, squareToPixel(tup.getColIndex()), squareToPixel(tup.getRowIndex()))){
 		isGameOver = true;
@@ -366,7 +358,7 @@ public class Floor {
 	}
     }
 
-	private boolean bombCoordinateCheck(int eRow, int eCol, boolean open) {
+	public boolean bombCoordinateCheck(int eRow, int eCol, boolean open) {
 		if (tiles[eRow][eCol] == FloorTile.BREAKABLEBLOCK) {
 			tiles[eRow][eCol] = FloorTile.FLOOR;
 			spawnPowerup(eRow, eCol);

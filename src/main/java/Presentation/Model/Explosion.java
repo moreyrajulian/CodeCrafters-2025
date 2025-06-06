@@ -1,5 +1,7 @@
 package Presentation.Model;
 
+//import Presentation.Model.Strategy.ExplosionStrategy;
+
 /**
  * Esta clase representa la explosion, o las "bolas de fuego", aquellas capaces de matar a un Presentation.Model.Enemy o a un Presentation.Model.Player,
  * así como de destruir BREAKABLEBLOCKS. Necesita un indice de fila y columna que se usa para la lógica y para el pintado.

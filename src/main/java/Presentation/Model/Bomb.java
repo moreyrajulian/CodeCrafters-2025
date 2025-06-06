@@ -1,5 +1,8 @@
 package Presentation.Model;
 
+import Presentation.Controller.Floor;
+import Presentation.Model.Strategy.ExplosionStrategy;
+
 public class Bomb
 {
     // Constants are static by definition.
@@ -10,11 +13,13 @@ public class Bomb
     private final int colIndex;
     private int explosionRadius;
     private boolean playerLeft;
+    private ExplosionStrategy explosionStrategy;
 
-    public Bomb(final int rowIndex, final int colIndex, int explosionRadius) {
+    public Bomb(final int rowIndex, final int colIndex, int explosionRadius, ExplosionStrategy strategy) {
         this.rowIndex = rowIndex;
         this.colIndex = colIndex;
         this.explosionRadius = explosionRadius;
+        this.explosionStrategy = strategy;
         playerLeft = false;
     }
 
@@ -24,6 +29,10 @@ public class Bomb
 
     public int getColIndex() {
         return colIndex;
+    }
+
+    public void explode(Floor floor) {
+        explosionStrategy.explode(this, floor);
     }
 
     // This method is static since every bomb has the same size.
@@ -49,5 +58,10 @@ public class Bomb
 
     public void setPlayerLeft(final boolean playerLeft) {
         this.playerLeft = playerLeft;
+    }
+
+    public void setExplosionRadius(int explosionRadius) {
+
+        this.explosionRadius = explosionRadius;
     }
 }
