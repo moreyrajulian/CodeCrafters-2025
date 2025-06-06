@@ -1,10 +1,11 @@
 package Presentation.Model;
 
 import Presentation.Controller.Floor;
+import Presentation.Model.Observer.Observador;
+import Presentation.Model.Strategy.ExplosionAmpliada;
 import Presentation.Model.Strategy.ExplosionStrategy;
 
-public class Bomb
-{
+public class Bomb implements Observador {
     // Constants are static by definition.
     private final static int BOMBSIZE = 30;
     private final static int STARTCOUNTDOWN = 100;
@@ -21,6 +22,16 @@ public class Bomb
         this.explosionRadius = explosionRadius;
         this.explosionStrategy = strategy;
         playerLeft = false;
+    }
+
+    @Override
+    public void update(Object arg) {
+        if (arg instanceof String) {
+            String powerUp = (String) arg;
+            if (powerUp.equals("BombRadiusPU") && explosionStrategy != null) {
+                this.explosionStrategy = new ExplosionAmpliada();
+            }
+        }
     }
 
     public int getRowIndex() {

@@ -1,12 +1,24 @@
 package Presentation.Model;
 
-public class Enemy extends AbstractCharacter
-{
+import Presentation.Model.Observer.Observador;
+
+public class Enemy extends AbstractCharacter implements Observador {
     private Move currentDirection;
 
     public Enemy(int x, int y, boolean vertical) {
         super(x, y, 7);
         currentDirection = randomDirection(vertical);
+    }
+
+    @Override
+    public void update(Object arg) {
+        if (arg instanceof String) {
+            String powerUp = (String) arg;
+            if (powerUp.equals("FreezeEnemiesPU")) {
+                this.setPixelsPerStep(0); // Congela al enemigo
+                this.setCambioVelocidadTemp();
+            }
+        }
     }
 
     public void changeDirection() {

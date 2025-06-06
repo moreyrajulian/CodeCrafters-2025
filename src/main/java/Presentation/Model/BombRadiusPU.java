@@ -23,6 +23,6 @@ public class BombRadiusPU extends AbstractPowerUp
     }
 
     public String getName() {
-        return "ExplosionAmpliada";
+        return "BombRadiusPU";
     }
 }

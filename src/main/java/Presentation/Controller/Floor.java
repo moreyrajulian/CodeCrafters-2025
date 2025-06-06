@@ -3,6 +3,8 @@ package Presentation.Controller;
 
 import Presentation.Model.*;
 import Presentation.Model.AbstractCharacter.Move;
+import Presentation.Model.Observer.Observable;
+import Presentation.Model.Observer.Observador;
 import Presentation.Model.Strategy.ExplosionStrategy;
 import Presentation.View.BombermanComponent;
 
@@ -14,7 +16,7 @@ import java.util.Collection;
 import java.util.List;
 
 
-public class Floor {
+public class Floor implements Observable {
     // Constants are static by definition.
     private final static double CHANCE_FOR_BREAKABLE_BLOCK = 0.3;
     private final static double CHANCE_FOR_RADIUS_POWERUP = 0.2;
@@ -30,6 +32,7 @@ public class Floor {
     private Collection<Bomb> explosionList= new ArrayList<>();
     private Collection<Explosion> explosionCoords= new ArrayList<>();
     private boolean isGameOver = false;
+	private List<Observador> observers = new ArrayList<>();
 
     public Floor(int width, int height, int nrOfEnemies) {
 	this.width = width;
@@ -39,6 +42,23 @@ public class Floor {
 	placeUnbreakableAndGrass();
 	spawnEnemies(nrOfEnemies);
     }
+
+	@Override
+	public void addObserver(Observador o) {
+		observers.add(o);
+	}
+
+	@Override
+	public void removeObserver(Observador o) {
+		observers.remove(o);
+	}
+
+	@Override
+	public void notifyObservers(Object arg) {
+		for (Observador o : observers) {
+			o.update(arg);
+		}
+	}
 
     public static int pixelToSquare(int pixelCoord){
 	return ((pixelCoord + BombermanComponent.getSquareSize()-1) / BombermanComponent.getSquareSize())-1;
@@ -89,7 +109,8 @@ public class Floor {
     }
 
     public void addToBombList(Bomb bomb) {
-	bombList.add(bomb);
+		bombList.add(bomb);
+		addObserver(bomb);
     }
 
     public void createPlayer(BombermanComponent bombermanComponent, Floor floor, ExplosionStrategy strategy){
@@ -273,10 +294,14 @@ public class Floor {
 		    continue;
 		}
 		if((randRowIndex % 2)==0){
-		    enemyList.add(new Enemy(squareToPixel(randColIndex) + BombermanComponent.getSquareMiddle(), squareToPixel(randRowIndex) + BombermanComponent.getSquareMiddle(), true));
+			Enemy enemy = new Enemy(squareToPixel(randColIndex) + BombermanComponent.getSquareMiddle(), squareToPixel(randRowIndex) + BombermanComponent.getSquareMiddle(), true);
+		    enemyList.add(enemy);
+			addObserver(enemy);
 		}
 		else{
-		    enemyList.add(new Enemy(squareToPixel(randColIndex) + BombermanComponent.getSquareMiddle(), squareToPixel(randRowIndex) + BombermanComponent.getSquareMiddle(), false));
+			Enemy enemy = new Enemy(squareToPixel(randColIndex) + BombermanComponent.getSquareMiddle(), squareToPixel(randRowIndex) + BombermanComponent.getSquareMiddle(), false);
+		    enemyList.add(enemy);
+			addObserver(enemy);
 		}
 		break;
 	    }
@@ -330,6 +355,7 @@ public class Floor {
 	for (AbstractPowerUp powerup : powerupList) {
 	    if(collidingCircles(player, powerup.getX()- BombermanComponent.getSquareMiddle(), powerup.getY()- BombermanComponent.getSquareMiddle())){
 		powerup.addToPlayer(player);
+		notifyObservers(powerup.getName());
 		powerupList.remove(powerup);
 		break;
 	    }
