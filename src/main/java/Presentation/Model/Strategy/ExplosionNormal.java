@@ -15,18 +15,18 @@ public class ExplosionNormal implements ExplosionStrategy {
         boolean eastOpen = true;
         floor.addExplosion(new Explosion(eRow, eCol));
 
-        for (int i = 1; i < bomb.getExplosionRadius()+1; i++) {
+        for (int i = 1; i < bomb.getExplosionRadius() + 1; i++) {
             if (eRow - i >= 0 && northOpen) {
-                northOpen = floor.bombCoordinateCheck(eRow-i, eCol, northOpen);
+                northOpen = floor.bombCoordinateCheck(eRow - i, eCol, northOpen);
             }
-            if (eRow - i <= floor.getHeight() && southOpen) {
-                southOpen = floor.bombCoordinateCheck(eRow+i, eCol, southOpen);
+            if (eRow + i < floor.getHeight() && southOpen) {
+                southOpen = floor.bombCoordinateCheck(eRow + i, eCol, southOpen);
             }
             if (eCol - i >= 0 && westOpen) {
-                westOpen = floor.bombCoordinateCheck(eRow, eCol-i, westOpen);
+                westOpen = floor.bombCoordinateCheck(eRow, eCol - i, westOpen);
             }
-            if (eCol + i <= floor.getWidth() && eastOpen) {
-                eastOpen = floor.bombCoordinateCheck(eRow, eCol+i, eastOpen);
+            if (eCol + i < floor.getWidth() && eastOpen) {
+                eastOpen = floor.bombCoordinateCheck(eRow, eCol + i, eastOpen);
             }
         }
     }
