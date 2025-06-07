@@ -5,7 +5,6 @@ import Presentation.Model.*;
 import Presentation.Model.AbstractCharacter.Move;
 import Presentation.Model.Observer.Observable;
 import Presentation.Model.Observer.Observador;
-import Presentation.Model.Strategy.ExplosionStrategy;
 import Presentation.View.BombermanComponent;
 
 import javax.sound.sampled.AudioInputStream;
@@ -54,9 +53,9 @@ public class Floor implements Observable {
 	}
 
 	@Override
-	public void notifyObservers(Object arg) {
+	public void notifyObservers(String s) {
 		for (Observador o : observers) {
-			o.update(arg);
+			o.update(s);
 		}
 	}
 
@@ -113,8 +112,8 @@ public class Floor implements Observable {
 		addObserver(bomb);
     }
 
-    public void createPlayer(BombermanComponent bombermanComponent, Floor floor, ExplosionStrategy strategy){
-		player = new Player(bombermanComponent, floor, strategy);
+    public void createPlayer(BombermanComponent bombermanComponent, Floor floor){
+		player = new Player(bombermanComponent, floor);
     }
 
     public int squareToPixel(int squareCoord){
@@ -202,11 +201,6 @@ public class Floor implements Observable {
 		explosionCoords.add(explosion);
 	}
 
-	public void breakBlock(int row, int col) {
-		tiles[row][col] = FloorTile.FLOOR;
-		spawnPowerup(row, col);
-	}
-
     public void playerInExplosion() {
 	for (Explosion tup:explosionCoords) {
 	    if(collidingCircles(player, squareToPixel(tup.getColIndex()), squareToPixel(tup.getRowIndex()))){
@@ -258,7 +252,7 @@ public class Floor implements Observable {
 		int x = squareToPixel(colIndex) + BombermanComponent.getSquareMiddle();
 		int y = squareToPixel(rowIndex) + BombermanComponent.getSquareMiddle();
 
-		if (r < 0.3) {
+		if (r < 0.9) {
 			powerupList.add(new BombRadiusPU(x, y));
 		} else if (r >= 0.3 && r < 0.6) {
 			powerupList.add(new BombCounterPU(x, y));

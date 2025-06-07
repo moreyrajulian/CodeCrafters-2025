@@ -11,14 +11,11 @@ public class Enemy extends AbstractCharacter implements Observador {
     }
 
     @Override
-    public void update(Object arg) {
-        if (arg instanceof String) {
-            String powerUp = (String) arg;
-            if (powerUp.equals("FreezeEnemiesPU")) {
-                this.setPixelsPerStep(0); // Congela al enemigo
+    public void update(String s) {
+            if (s.equals("FreezeEnemiesPU")) {
+                this.setPixelsPerStep(0);
                 this.setCambioVelocidadTemp();
             }
-        }
     }
 
     public void changeDirection() {

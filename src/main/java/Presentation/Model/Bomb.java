@@ -25,13 +25,14 @@ public class Bomb implements Observador {
     }
 
     @Override
-    public void update(Object arg) {
-        if (arg instanceof String) {
-            String powerUp = (String) arg;
-            if (powerUp.equals("BombRadiusPU") && explosionStrategy != null) {
+    public void update(String s) {
+            if (s.equals("BombRadiusPU") && explosionStrategy != null) {
                 this.explosionStrategy = new ExplosionAmpliada();
             }
-        }
+    }
+
+    public ExplosionStrategy getExplosionStrategy() {
+        return this.explosionStrategy;
     }
 
     public int getRowIndex() {
@@ -69,10 +70,5 @@ public class Bomb implements Observador {
 
     public void setPlayerLeft(final boolean playerLeft) {
         this.playerLeft = playerLeft;
-    }
-
-    public void setExplosionRadius(int explosionRadius) {
-
-        this.explosionRadius = explosionRadius;
     }
 }

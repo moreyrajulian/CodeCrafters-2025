@@ -1,5 +1,5 @@
 package Presentation.Model.Observer;
 
 public interface Observador {
-    void update(Object arg);
+    void update(String s);
 }

@@ -2,7 +2,6 @@ package GameLauncher;
 
 import Presentation.Controller.Floor;
 import Presentation.Model.MP3Player;
-import Presentation.Model.Strategy.ExplosionNormal;
 import Presentation.View.BombermanFrame;
 
 import javax.swing.*;
@@ -23,7 +22,7 @@ public class GameLauncher {
 
     public static void startGame() {
         Floor floor = new Floor(width, height, nrOfEnemies);
-        BombermanFrame frame = new BombermanFrame("Bomberman", floor, new ExplosionNormal());
+        BombermanFrame frame = new BombermanFrame("Bomberman", floor);
         frame.setLocationRelativeTo(null);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         floor.addFloorListener(frame.getBombermanComponent());

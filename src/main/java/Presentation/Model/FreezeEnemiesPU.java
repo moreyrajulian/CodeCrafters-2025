@@ -65,8 +65,7 @@ private static final int duracion = 5000;
      * @return El nombre "FreezeEnemies".
      */
     public String getName() {
-        final String name = "FreezeEnemies";
-        return name;
+        return "FreezeEnemies";
     }
 
 }

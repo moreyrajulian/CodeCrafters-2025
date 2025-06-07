@@ -2,7 +2,6 @@ package Presentation.View;
 
 import Presentation.Controller.Floor;
 import Presentation.Controller.FloorListener;
-import Presentation.Model.Strategy.ExplosionStrategy;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,16 +12,14 @@ import java.awt.event.KeyEvent;
 public class BombermanFrame extends JFrame {
     private Floor floor;
     private BombermanComponent bombermanComponent;
-	private ExplosionStrategy strategy;
 
-    public BombermanFrame(final String title, Floor floor, ExplosionStrategy strategy) throws HeadlessException {
+    public BombermanFrame(final String title, Floor floor) throws HeadlessException {
 		super(title); //Titulo en la ventana
 		this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE); //La funcion setDefaultCloseOperation de JFrame
 																		 //determina que hacer cuando se cierra la ventana
 		bombermanComponent = new BombermanComponent(floor);
 		this.floor = floor;
-		this.strategy = strategy;
-		floor.createPlayer(bombermanComponent, floor, strategy);
+		floor.createPlayer(bombermanComponent, floor);
 		setKeyStrokes();
 
 		this.setLayout(new BorderLayout());
