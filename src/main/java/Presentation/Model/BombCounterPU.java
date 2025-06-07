@@ -19,7 +19,6 @@ public class BombCounterPU extends AbstractPowerUp
     }
 
     public String getName() {
-	    final String name = "BombCounter";
-	    return name;
+	    return "BombCounterPU";
     }
 }

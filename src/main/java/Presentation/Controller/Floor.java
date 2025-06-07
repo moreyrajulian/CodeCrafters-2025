@@ -34,12 +34,12 @@ public class Floor implements Observable {
 	private List<Observador> observers = new ArrayList<>();
 
     public Floor(int width, int height, int nrOfEnemies) {
-	this.width = width;
-	this.height = height;
-	this.tiles = new FloorTile[height][width];
-	placeBreakable();
-	placeUnbreakableAndGrass();
-	spawnEnemies(nrOfEnemies);
+		this.width = width;
+		this.height = height;
+		this.tiles = new FloorTile[height][width];
+		placeBreakable();
+		placeUnbreakableAndGrass();
+		spawnEnemies(nrOfEnemies);
     }
 
 	@Override
@@ -53,9 +53,9 @@ public class Floor implements Observable {
 	}
 
 	@Override
-	public void notifyObservers(String s) {
+	public void notifyObservers(String s, Player player) {
 		for (Observador o : observers) {
-			o.update(s);
+			o.update(s, player);
 		}
 	}
 
@@ -252,7 +252,7 @@ public class Floor implements Observable {
 		int x = squareToPixel(colIndex) + BombermanComponent.getSquareMiddle();
 		int y = squareToPixel(rowIndex) + BombermanComponent.getSquareMiddle();
 
-		if (r < 0.9) {
+		if (r < 0.3) {
 			powerupList.add(new BombRadiusPU(x, y));
 		} else if (r >= 0.3 && r < 0.6) {
 			powerupList.add(new BombCounterPU(x, y));
@@ -349,7 +349,7 @@ public class Floor implements Observable {
 	for (AbstractPowerUp powerup : powerupList) {
 	    if(collidingCircles(player, powerup.getX()- BombermanComponent.getSquareMiddle(), powerup.getY()- BombermanComponent.getSquareMiddle())){
 		powerup.addToPlayer(player);
-		notifyObservers(powerup.getName());
+		notifyObservers(powerup.getName(), player);
 		powerupList.remove(powerup);
 		break;
 	    }

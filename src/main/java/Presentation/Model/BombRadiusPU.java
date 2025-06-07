@@ -10,10 +10,13 @@ public class BombRadiusPU extends AbstractPowerUp {
         super(colIndex, rowIndex);
     }
 
+//    @Override
+//    public void addToPlayer(Player player) {
+//        player.setPowerUpRadius(true);
+//    }
+
     @Override
-    public void addToPlayer(Player player) {
-        player.setPowerUpRadius(true);
-    }
+    public void addToPlayer(Player player) {}
 
     public String getName() {
         return "BombRadiusPU";

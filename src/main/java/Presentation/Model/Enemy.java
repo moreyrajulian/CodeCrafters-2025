@@ -1,9 +1,14 @@
 package Presentation.Model;
 
+import Presentation.Controller.Floor;
 import Presentation.Model.Observer.Observador;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class Enemy extends AbstractCharacter implements Observador {
     private Move currentDirection;
+    private static final int duracion = 5000;
 
     public Enemy(int x, int y, boolean vertical) {
         super(x, y, 7);
@@ -11,10 +16,27 @@ public class Enemy extends AbstractCharacter implements Observador {
     }
 
     @Override
-    public void update(String s) {
+    public void update(String s, Player player) {
             if (s.equals("FreezeEnemiesPU")) {
-                this.setPixelsPerStep(0);
-                this.setCambioVelocidadTemp();
+
+                Floor floor = player.getFloor();
+
+            // Congelar todos los enemigos (velocidad = 0)
+
+            for (Enemy enemy: floor.getEnemyList()){
+                enemy.setPixelsPerStep(0);
+                enemy.setCambioVelocidadTemp();
+            }
+            // Programa una tarea para descongelar a los enemigos después de la duración
+            new Timer().schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    // Descongelar enemigos
+                    for (Enemy enemy : floor.getEnemyList()) {
+                        enemy.clearCambioVelocidadTemp();
+                    }
+                }
+            }, duracion);
             }
     }
 

@@ -135,13 +135,13 @@ public class BombermanComponent extends JComponent implements FloorListener
 		//Paint powerups
 		for (AbstractPowerUp p : floor.getPowerupList()) {
 			switch (p.getName()) {
-				case "BombCounter":
+				case "BombCounterPU":
 					g2d.setColor(Color.BLACK); // ⚫
 					break;
-				case "BombRadius":
+				case "BombRadiusPU":
 					g2d.setColor(Color.RED);   // 🔴
 					break;
-				case "FreezeEnemies":
+				case "FreezeEnemiesPU":
 					g2d.setColor(Color.GREEN); // 🟢 o podés usar Color.WHITE
 					break;
 			}

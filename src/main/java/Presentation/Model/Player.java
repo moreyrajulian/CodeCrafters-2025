@@ -78,19 +78,19 @@ public class Player extends AbstractCharacter
     }
 
     public int getBombCount() {
-	return bombCount;
+		return bombCount;
     }
 
     public void setBombCount(int bombCount) {
-	this.bombCount = bombCount;
+		this.bombCount = bombCount;
     }
 
     public int getExplosionRadius() {
-	return explosionRadius;
+		return explosionRadius;
     }
 
     private void movePlayer(Move move) {
-	playerController.movePlayer(move);
+		playerController.movePlayer(move);
     }
 
 	public Floor getFloor() {

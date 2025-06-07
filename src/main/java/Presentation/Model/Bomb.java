@@ -2,7 +2,6 @@ package Presentation.Model;
 
 import Presentation.Controller.Floor;
 import Presentation.Model.Observer.Observador;
-import Presentation.Model.Strategy.ExplosionAmpliada;
 import Presentation.Model.Strategy.ExplosionStrategy;
 
 public class Bomb implements Observador {
@@ -25,9 +24,9 @@ public class Bomb implements Observador {
     }
 
     @Override
-    public void update(String s) {
+    public void update(String s, Player player) {
             if (s.equals("BombRadiusPU") && explosionStrategy != null) {
-                this.explosionStrategy = new ExplosionAmpliada();
+                player.setPowerUpRadius(true);
             }
     }
 
