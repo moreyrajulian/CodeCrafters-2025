@@ -37,6 +37,7 @@ public class PlayerController {
         if (!floor.squareHasBomb(row, col) && floor.getBombListSize() < bombCount) {
             if (player.hasPowerUpRadius()) {
                 floor.addToBombList(new Bomb(row, col, explosionRadius, new ExplosionAmpliada()));
+                player.setPowerUpRadius(false);
             } else {
                 floor.addToBombList(new Bomb(row, col, explosionRadius, new ExplosionNormal()));
             }

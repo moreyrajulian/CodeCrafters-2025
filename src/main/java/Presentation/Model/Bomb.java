@@ -30,10 +30,6 @@ public class Bomb implements Observador {
             }
     }
 
-    public ExplosionStrategy getExplosionStrategy() {
-        return this.explosionStrategy;
-    }
-
     public int getRowIndex() {
         return rowIndex;
     }
