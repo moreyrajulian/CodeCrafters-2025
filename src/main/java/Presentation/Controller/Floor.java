@@ -32,15 +32,23 @@ public class Floor implements Observable {
     private Collection<Explosion> explosionCoords= new ArrayList<>();
     private boolean isGameOver = false;
 	private List<Observador> observers = new ArrayList<>();
+	private static Floor instance;
 
-    public Floor(int width, int height, int nrOfEnemies) {
+	private Floor(int width, int height, int nrOfEnemies) {
 		this.width = width;
 		this.height = height;
 		this.tiles = new FloorTile[height][width];
 		placeBreakable();
 		placeUnbreakableAndGrass();
 		spawnEnemies(nrOfEnemies);
-    }
+	}
+
+	public static Floor getInstance(int width, int height, int nrOfEnemies) {
+		if (instance == null) {
+			instance = new Floor(width, height, nrOfEnemies);
+		}
+		return instance;
+	}
 
 	@Override
 	public void addObserver(Observador o) {

@@ -3,8 +3,6 @@ package Presentation.Controller;
 import Presentation.Model.AbstractCharacter.Move;
 import Presentation.Model.Bomb;
 import Presentation.Model.Player;
-import Presentation.Model.Strategy.ExplosionAmpliada;
-import Presentation.Model.Strategy.ExplosionNormal;
 
 
 public class PlayerController {
@@ -35,12 +33,12 @@ public class PlayerController {
 
     public void dropBomb(int row, int col, int explosionRadius, int bombCount) {
         if (!floor.squareHasBomb(row, col) && floor.getBombListSize() < bombCount) {
-            if (player.hasPowerUpRadius()) {
-                floor.addToBombList(new Bomb(row, col, explosionRadius, new ExplosionAmpliada()));
-                player.setPowerUpRadius(false);
-            } else {
-                floor.addToBombList(new Bomb(row, col, explosionRadius, new ExplosionNormal()));
+            Bomb bomb = new Bomb(row, col, explosionRadius);
+            if (player.esAmpliada()) {
+                bomb.setExplosionStrategy(new Presentation.Model.Strategy.ExplosionAmpliada());
+                player.setAmpliada(false);
             }
+            floor.addToBombList(bomb);
         }
         floor.notifyListeners();
     }

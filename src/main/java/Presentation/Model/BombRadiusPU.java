@@ -22,3 +22,4 @@ public class BombRadiusPU extends AbstractPowerUp {
         return "BombRadiusPU";
     }
 }
+

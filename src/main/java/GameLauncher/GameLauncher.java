@@ -21,7 +21,7 @@ public class GameLauncher {
     }
 
     public static void startGame() {
-        Floor floor = new Floor(width, height, nrOfEnemies);
+        Floor floor = Floor.getInstance(width, height, nrOfEnemies);
         BombermanFrame frame = new BombermanFrame("Bomberman", floor);
         frame.setLocationRelativeTo(null);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

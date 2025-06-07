@@ -2,6 +2,7 @@ package Presentation.Model;
 
 import Presentation.Controller.Floor;
 import Presentation.Model.Observer.Observador;
+import Presentation.Model.Strategy.ExplosionNormal;
 import Presentation.Model.Strategy.ExplosionStrategy;
 
 public class Bomb implements Observador {
@@ -13,21 +14,24 @@ public class Bomb implements Observador {
     private final int colIndex;
     private int explosionRadius;
     private boolean playerLeft;
-    private ExplosionStrategy explosionStrategy;
+    private ExplosionStrategy explosionStrategy = new ExplosionNormal();
 
-    public Bomb(final int rowIndex, final int colIndex, int explosionRadius, ExplosionStrategy strategy) {
+    public Bomb(final int rowIndex, final int colIndex, int explosionRadius) {
         this.rowIndex = rowIndex;
         this.colIndex = colIndex;
         this.explosionRadius = explosionRadius;
-        this.explosionStrategy = strategy;
         playerLeft = false;
     }
 
     @Override
     public void update(String s, Player player) {
             if (s.equals("BombRadiusPU") && explosionStrategy != null) {
-                player.setPowerUpRadius(true);
+                player.setAmpliada(true);
             }
+    }
+
+    public void setExplosionStrategy(ExplosionStrategy explosionStrategy) {
+        this.explosionStrategy = explosionStrategy;
     }
 
     public int getRowIndex() {

@@ -18,7 +18,7 @@ public class Player extends AbstractCharacter
     private int bombCount;
     private Floor floor;
 	private PlayerController playerController;
-	private boolean powerUpRadius = false;
+    private boolean esAmpliada = false;
 
     public Action up = new AbstractAction() {
 	public void actionPerformed(ActionEvent e) {
@@ -97,11 +97,11 @@ public class Player extends AbstractCharacter
 		return floor;
 	}
 
-	public boolean hasPowerUpRadius() {
-		return powerUpRadius;
-	}
+    public boolean esAmpliada() {
+        return esAmpliada;
+    }
 
-	public void setPowerUpRadius(boolean value) {
-		this.powerUpRadius = value;
-	}
+    public void setAmpliada(boolean Ampliada) {
+        this.esAmpliada = Ampliada;
+    }
 }
