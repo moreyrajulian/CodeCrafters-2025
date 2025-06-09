@@ -50,6 +50,10 @@ public class Floor implements Observable {
 		return instance;
 	}
 
+	public static void resetFloor() {
+		instance = null;
+	}
+
 	@Override
 	public void addObserver(Observador o) {
 		observers.add(o);

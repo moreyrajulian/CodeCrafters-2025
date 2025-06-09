@@ -44,11 +44,11 @@ public class GameLauncher {
     private static void gameOver(BombermanFrame frame, Floor floor) {
         if(music!=null){
             music.stop();
-
         }
         clockTimer.stop();
         JOptionPane.showMessageDialog(null, "¡Game Over!", "Fin del juego", JOptionPane.INFORMATION_MESSAGE);
         frame.dispose();
+        Floor.resetFloor();
         startGame();
     }
 
@@ -69,6 +69,7 @@ public class GameLauncher {
                 clockTimer.stop();
                 JOptionPane.showMessageDialog(null, "¡Ganaste!", "Victoria", JOptionPane.INFORMATION_MESSAGE);
                 frame.dispose();
+                Floor.resetFloor();
                 startGame();
             }
         }
