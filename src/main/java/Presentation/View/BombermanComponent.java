@@ -1,5 +1,7 @@
 package Presentation.View;
 
+import Presentation.Configuracion.GameConfig;
+import Presentation.Configuracion.GameConfig;
 import Presentation.Controller.Floor;
 import Presentation.Controller.FloorListener;
 import Presentation.Model.FloorTile;
@@ -36,6 +38,7 @@ public class BombermanComponent extends JComponent implements FloorListener
     private final static int PAINT_PARAMETER_24 = 24;
     private final Floor floor;
     private final AbstractMap<FloorTile, Image> imageMap;
+
 
     public BombermanComponent(Floor floor) {
 	this.floor = floor;
@@ -149,8 +152,8 @@ public class BombermanComponent extends JComponent implements FloorListener
 			g2d.fillOval(
 					p.getX() - CHARACTER_ADJUSTMENT_FOR_PAINT,
 					p.getY() - CHARACTER_ADJUSTMENT_FOR_PAINT,
-					p.getPowerUpSize(),
-					p.getPowerUpSize()
+					GameConfig.POWERUP_SIZE,
+					GameConfig.POWERUP_SIZE
 			);
 		}
 
@@ -160,7 +163,7 @@ public class BombermanComponent extends JComponent implements FloorListener
 			g2d.setColor(Color.RED);
 			int bombX = floor.squareToPixel(b.getColIndex());
 			int bombY = floor.squareToPixel(b.getRowIndex());
-			g2d.fillOval(bombX + BOMB_ADJUSTMENT_1, bombY + BOMB_ADJUSTMENT_1, Bomb.getBOMBSIZE(), Bomb.getBOMBSIZE());
+			g2d.fillOval(bombX + BOMB_ADJUSTMENT_1, bombY + BOMB_ADJUSTMENT_1, GameConfig.BOMBSIZE, GameConfig.BOMBSIZE);
 			g2d.setColor(Color.ORANGE);
 			g2d.fillOval(bombX + BOMB_ADJUSTMENT_2, bombY + BOMB_ADJUSTMENT_1, BOMB_ADJUSTMENT_1, BOMB_ADJUSTMENT_2);
 		}
@@ -178,8 +181,8 @@ public class BombermanComponent extends JComponent implements FloorListener
             g2d.fillOval(
                     floor.squareToPixel(tup.getColIndex()) + 5,
                     floor.squareToPixel(tup.getRowIndex()) + 5,
-                    Bomb.getBOMBSIZE(),
-                    Bomb.getBOMBSIZE()
+                    GameConfig.BOMBSIZE,
+					GameConfig.BOMBSIZE
             );
         }
 
@@ -234,7 +237,7 @@ public class BombermanComponent extends JComponent implements FloorListener
     private void paintEnemy(Enemy e, Graphics g2d){
 	// Paint body
 	g2d.setColor(Color.orange);
-	g2d.fillOval(e.getX()-CHARACTER_ADJUSTMENT_FOR_PAINT, e.getY()-CHARACTER_ADJUSTMENT_FOR_PAINT, e.getSize(), e.getSize());
+	g2d.fillOval(e.getX()-CHARACTER_ADJUSTMENT_FOR_PAINT, e.getY()-CHARACTER_ADJUSTMENT_FOR_PAINT, GameConfig.CHARACTERSIZE, GameConfig.CHARACTERSIZE);
 	// Paint brows
 	g2d.setColor(Color.BLACK);
 	// Paint eyes
@@ -255,10 +258,10 @@ public class BombermanComponent extends JComponent implements FloorListener
 	g2d.fillOval(player.getX()-CHARACTER_ADJUSTMENT_FOR_PAINT+PAINT_PARAMETER_15, player.getY()-CHARACTER_ADJUSTMENT_FOR_PAINT-2, PAINT_PARAMETER_15, PAINT_PARAMETER_15);
 	// Paint body
 	g2d.setColor(Color.LIGHT_GRAY);
-	g2d.fillOval(player.getX()-CHARACTER_ADJUSTMENT_FOR_PAINT, player.getY()-CHARACTER_ADJUSTMENT_FOR_PAINT, player.getSize(), player.getSize());
+	g2d.fillOval(player.getX()-CHARACTER_ADJUSTMENT_FOR_PAINT, player.getY()-CHARACTER_ADJUSTMENT_FOR_PAINT, GameConfig.CHARACTERSIZE, GameConfig.CHARACTERSIZE);
 	// Paint face
 	g2d.setColor(Color.PINK);
-	g2d.fillOval(player.getX()-CHARACTER_ADJUSTMENT_FOR_PAINT+3, player.getY()-CHARACTER_ADJUSTMENT_FOR_PAINT+3, player.getSize()-6, player.getSize()-6);
+	g2d.fillOval(player.getX()-CHARACTER_ADJUSTMENT_FOR_PAINT+3, player.getY()-CHARACTER_ADJUSTMENT_FOR_PAINT+3, GameConfig.CHARACTERSIZE-6, GameConfig.CHARACTERSIZE-6);
 	// Paint eyes
 	g2d.setColor(Color.BLACK);
 	g2d.drawLine(player.getX()-CHARACTER_ADJUSTMENT_FOR_PAINT+10, player.getY()-CHARACTER_ADJUSTMENT_FOR_PAINT+10, player.getX()-CHARACTER_ADJUSTMENT_FOR_PAINT+10, player.getY()-CHARACTER_ADJUSTMENT_FOR_PAINT+PAINT_PARAMETER_18);

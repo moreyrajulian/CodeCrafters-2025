@@ -4,6 +4,7 @@ package Presentation.Controller;
 import Presentation.Model.*;
 import Presentation.Model.AbstractCharacter.*;
 import Presentation.View.BombermanComponent;
+import Presentation.Configuracion.GameConfig;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -386,7 +387,7 @@ public class Floor {
 	int a2 = a * a;
 	int b2 = b * b;
 	double c = Math.sqrt(a2 + b2);
-	return(abstractCharacter.getSize() > c);
+	return(GameConfig.CHARACTERSIZE > c);
     }
 
     private boolean squareCircleInstersect(int row, int col, AbstractCharacter abstractCharacter) {
@@ -394,7 +395,7 @@ public class Floor {
 	int characterX = abstractCharacter.getX();
 	int characterY = abstractCharacter.getY();
 
-	int circleRadius = abstractCharacter.getSize() / 2;
+	int circleRadius = GameConfig.CHARACTERSIZE / 2;
 	int squareSize = BombermanComponent.getSquareSize();
 	int squareCenterX = (col*squareSize)+(squareSize/2);
 	int squareCenterY = (row*squareSize)+(squareSize/2);
