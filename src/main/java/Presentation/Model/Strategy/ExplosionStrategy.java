@@ -5,4 +5,5 @@ import Presentation.Model.Bomb;
 
 public interface ExplosionStrategy {
      void explode(Bomb bomb, Floor floor);
+     int getExplosionRadius();
 }

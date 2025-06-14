@@ -14,11 +14,9 @@ public class Player extends AbstractCharacter
     private final static int PLAYER_START_X = 60;
     private final static int PLAYER_START_Y = 60;
     private final static int PLAYER_PIXELS_BY_STEP = 6;
-    private int explosionRadius;
     private int bombCount;
     private Floor floor;
 	private PlayerController playerController;
-    private boolean esAmpliada = false;
 
     public Action up = new AbstractAction() {
 	public void actionPerformed(ActionEvent e) {
@@ -51,20 +49,20 @@ public class Player extends AbstractCharacter
 
 	public Action dropBomb = new AbstractAction() {
 		public void actionPerformed(ActionEvent e) {
-			playerController.dropBomb(getRowIndex(), getColIndex(), getExplosionRadius(), getBombCount());
+			playerController.dropBomb(getRowIndex(), getColIndex(), getBombCount());
 		}
 	};
 
     public Player(BombermanComponent bombermanComponent, Floor floor) {
 		super(PLAYER_START_X, PLAYER_START_Y, PLAYER_PIXELS_BY_STEP);
-		explosionRadius = 1;
 		bombCount = 1;
 		this.floor = floor;
 		this.playerController = new PlayerController(this, floor);
+		floor.addObserver(playerController);
 		setPlayerButtons(bombermanComponent);
     }
 
-    public void setPlayerButtons(BombermanComponent bombermanComponent){
+    public void setPlayerButtons(BombermanComponent bombermanComponent) {
 		bombermanComponent.getInputMap().put(KeyStroke.getKeyStroke("RIGHT"), "moveRight");
 		bombermanComponent.getInputMap().put(KeyStroke.getKeyStroke("LEFT"), "moveLeft");
 		bombermanComponent.getInputMap().put(KeyStroke.getKeyStroke("UP"), "moveUp");
@@ -85,10 +83,6 @@ public class Player extends AbstractCharacter
 		this.bombCount = bombCount;
     }
 
-    public int getExplosionRadius() {
-		return explosionRadius;
-    }
-
     private void movePlayer(Move move) {
 		playerController.movePlayer(move);
     }
@@ -96,12 +90,4 @@ public class Player extends AbstractCharacter
 	public Floor getFloor() {
 		return floor;
 	}
-
-    public boolean esAmpliada() {
-        return esAmpliada;
-    }
-
-    public void setAmpliada(boolean Ampliada) {
-        this.esAmpliada = Ampliada;
-    }
 }

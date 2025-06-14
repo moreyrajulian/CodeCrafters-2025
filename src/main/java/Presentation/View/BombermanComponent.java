@@ -40,6 +40,7 @@ public class BombermanComponent extends JComponent implements FloorListener
     private Image bombCounterImg;
     private Image bombRadiusImg;
     private Image freezeEnemiesImg;
+	private Image bombdiagonalImg;
 
     public BombermanComponent(Floor floor) {
 	this.floor = floor;
@@ -53,6 +54,7 @@ public class BombermanComponent extends JComponent implements FloorListener
         bombCounterImg = ImageIO.read(getClass().getResource("/Tiles/bomb_counter.png"));
         bombRadiusImg = ImageIO.read(getClass().getResource("/Tiles/bomb_radius.png"));
         freezeEnemiesImg = ImageIO.read(getClass().getResource("/Tiles/freeze_enemies.png"));
+		bombdiagonalImg = ImageIO.read(getClass().getResource("/Tiles/bomb_diagonal.png"));
 	} catch (IOException e) {
 		throw new RuntimeException(e);
 	}
@@ -152,6 +154,9 @@ public class BombermanComponent extends JComponent implements FloorListener
 					break;
 				case "FreezeEnemiesPU":
 					puImg = freezeEnemiesImg;
+					break;
+				case "BombDiagonalPU":
+					puImg = bombdiagonalImg;
 					break;
 			}
 			if (puImg != null) {

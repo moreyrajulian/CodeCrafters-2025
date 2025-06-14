@@ -26,7 +26,8 @@ public class Floor implements Observable {
     private Collection<FloorListener> floorListeners = new ArrayList<>();
     private Player player = null;
     private Collection<Enemy> enemyList = new ArrayList<>();
-    private List<Bomb> bombList= new ArrayList<>();
+	private EnemyManager enemyManager;
+	private List<Bomb> bombList= new ArrayList<>();
     private Collection<AbstractPowerUp> powerupList = new ArrayList<>();
     private Collection<Bomb> explosionList= new ArrayList<>();
     private Collection<Explosion> explosionCoords= new ArrayList<>();
@@ -41,6 +42,8 @@ public class Floor implements Observable {
 		placeBreakable();
 		placeUnbreakableAndGrass();
 		spawnEnemies(nrOfEnemies);
+		this.enemyManager = new EnemyManager((List<Enemy>) enemyList);
+		addObserver(enemyManager);
 	}
 
 	public static Floor getInstance(int width, int height, int nrOfEnemies) {
@@ -121,7 +124,6 @@ public class Floor implements Observable {
 
     public void addToBombList(Bomb bomb) {
 		bombList.add(bomb);
-		addObserver(bomb);
     }
 
     public void createPlayer(BombermanComponent bombermanComponent, Floor floor){
@@ -259,19 +261,36 @@ public class Floor implements Observable {
 	tiles[2][1] = FloorTile.FLOOR;
     }
 
-	private void spawnPowerup(int rowIndex, int colIndex) {
-		double r = Math.random();
-		int x = squareToPixel(colIndex) + BombermanComponent.getSquareMiddle();
-		int y = squareToPixel(rowIndex) + BombermanComponent.getSquareMiddle();
+    private void spawnPowerup(int rowIndex, int colIndex) {
 
-		if (r < 0.3) {
-			powerupList.add(new BombRadiusPU(x, y));
-		} else if (r >= 0.3 && r < 0.6) {
-			powerupList.add(new BombCounterPU(x, y));
-		} else if (r >= 0.6 && r < 0.8) {
-			powerupList.add(new FreezeEnemiesPU(x, y));
+        // Evitar el contorno del mapa (filas y columnas no accesibles)
+        if (rowIndex <= 0 || rowIndex >= (height - 1) || colIndex <= 0 || colIndex >= (width - 1)) {
+            System.out.println("Contorno del mapa, no se coloca powerup " + rowIndex + ", " + colIndex);
+            return;
+        }
+//        // Solo colocar powerup si la celda es accesible (FLOOR)
+//        if (tiles[rowIndex][colIndex] != FloorTile.FLOOR) {
+//            System.out.println("No es FLOOR, no se coloca powerup");
+//            return;
+//        }
+
+        double r = Math.random();
+        int x = squareToPixel(rowIndex) + BombermanComponent.getSquareMiddle();
+        int y = squareToPixel(colIndex) + BombermanComponent.getSquareMiddle();
+        if (r < 0.25) {
+            powerupList.add(new BombRadiusPU(x, y));
+            System.out.println("Powerup BombRadiusPU colocado en: (" + rowIndex + ", " + colIndex + ")");
+        } else if (r < 0.5) {
+            powerupList.add(new BombCounterPU(x, y));
+            System.out.println("Powerup BombCounterPU colocado en: (" + rowIndex + ", " + colIndex + ")");
+        } else if (r < 0.75) {
+            powerupList.add(new FreezeEnemiesPU(x, y));
+            System.out.println("Powerup FreezeEnemiesPU colocado en: (" + rowIndex + ", " + colIndex + ")");
+        } else {
+			powerupList.add(new BombDiagonalPU(x, y));
+			System.out.println("Powerup BombDiagonalPU colocado en: (" + rowIndex + ", " + colIndex + ")");
 		}
-	}
+    }
 
 
 	private void placeUnbreakableAndGrass () {
@@ -281,7 +300,7 @@ public class Floor implements Observable {
 		if ((i == 0) || (j == 0) || (i == height - 1) || (j == width - 1) || i % 2 == 0 && j % 2 == 0) {
 		    tiles[i][j] = FloorTile.UNBREAKABLEBLOCK;
 		    //Every-other unbreakable
-		} else if (tiles[i][j] != FloorTile.BREAKABLEBLOCK) {
+		}else if (tiles[i][j] != FloorTile.BREAKABLEBLOCK) {
 		    tiles[i][j] = FloorTile.FLOOR;
 		}
 	    }
@@ -302,12 +321,12 @@ public class Floor implements Observable {
 		if((randRowIndex % 2)==0){
 			Enemy enemy = new Enemy(squareToPixel(randColIndex) + BombermanComponent.getSquareMiddle(), squareToPixel(randRowIndex) + BombermanComponent.getSquareMiddle(), true);
 		    enemyList.add(enemy);
-			addObserver(enemy);
+			//addObserver(enemy);
 		}
 		else{
 			Enemy enemy = new Enemy(squareToPixel(randColIndex) + BombermanComponent.getSquareMiddle(), squareToPixel(randRowIndex) + BombermanComponent.getSquareMiddle(), false);
 		    enemyList.add(enemy);
-			addObserver(enemy);
+			//addObserver(enemy);
 		}
 		break;
 	    }
@@ -359,7 +378,7 @@ public class Floor implements Observable {
 
     public void collisionWithPowerup() {
 	for (AbstractPowerUp powerup : powerupList) {
-	    if(collidingCircles(player, powerup.getX()- BombermanComponent.getSquareMiddle(), powerup.getY()- BombermanComponent.getSquareMiddle())){
+	    if(collidingCircles(player, powerup.getX()- BombermanComponent.getSquareMiddle(), powerup.getY()- BombermanComponent.getSquareMiddle())) {
 		powerup.addToPlayer(player);
 		notifyObservers(powerup.getName(), player);
 		powerupList.remove(powerup);
@@ -370,7 +389,7 @@ public class Floor implements Observable {
 
 
 
-    public boolean squareHasBomb(int rowIndex, int colIndex){
+    public boolean squareHasBomb(int rowIndex, int colIndex) {
 	for (Bomb b: bombList) {
 	    if(b.getRowIndex()==rowIndex && b.getColIndex()==colIndex){
 		return true;
@@ -405,12 +424,12 @@ public class Floor implements Observable {
 
 
 	private boolean collidingCircles(AbstractCharacter abstractCharacter, int x, int y){
-	int a = abstractCharacter.getX() - x - BombermanComponent.getSquareMiddle();
-	int b = abstractCharacter.getY() - y - BombermanComponent.getSquareMiddle();
-	int a2 = a * a;
-	int b2 = b * b;
-	double c = Math.sqrt(a2 + b2);
-	return(abstractCharacter.getSize() > c);
+		int a = abstractCharacter.getX() - x - BombermanComponent.getSquareMiddle();
+		int b = abstractCharacter.getY() - y - BombermanComponent.getSquareMiddle();
+		int a2 = a * a;
+		int b2 = b * b;
+		double c = Math.sqrt(a2 + b2);
+		return(abstractCharacter.getSize() > c);
     }
 
     private boolean squareCircleInstersect(int row, int col, AbstractCharacter abstractCharacter) {

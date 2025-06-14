@@ -5,6 +5,17 @@ import Presentation.Model.Bomb;
 import Presentation.Model.Explosion;
 
 public class ExplosionNormal implements ExplosionStrategy {
+
+    private int explosionRadius;
+
+    public ExplosionNormal() {
+        this.explosionRadius = 1;
+    }
+
+    public int getExplosionRadius() {
+        return this.explosionRadius;
+    }
+
     @Override
     public void explode(Bomb bomb, Floor floor) {
         int eRow = bomb.getRowIndex();
@@ -15,7 +26,7 @@ public class ExplosionNormal implements ExplosionStrategy {
         boolean eastOpen = true;
         floor.addExplosion(new Explosion(eRow, eCol));
 
-        for (int i = 1; i < bomb.getExplosionRadius() + 1; i++) {
+        for (int i = 1; i < this.getExplosionRadius() + 1; i++) {
             if (eRow - i >= 0 && northOpen) {
                 northOpen = floor.bombCoordinateCheck(eRow - i, eCol, northOpen);
             }

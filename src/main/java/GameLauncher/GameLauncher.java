@@ -12,7 +12,7 @@ public class GameLauncher {
     private static final int TIME_STEP = 30;
     private static int width = 25;
     private static int height = 15;
-    private static int nrOfEnemies = 1;
+    private static int nrOfEnemies = 5;
     private static Timer clockTimer = null;
     private static MP3Player music;
 
@@ -33,16 +33,16 @@ public class GameLauncher {
                 tick(frame, floor);
             }
         };
+
         clockTimer = new Timer(TIME_STEP, doOneStep);
         clockTimer.setCoalesce(true);
         clockTimer.start();
         music = new MP3Player("background.mp3");
         music.start();
-
     }
 
     private static void gameOver(BombermanFrame frame, Floor floor) {
-        if(music!=null){
+        if(music!=null) {
             music.stop();
         }
         clockTimer.stop();

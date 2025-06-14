@@ -5,6 +5,17 @@ import Presentation.Model.Bomb;
 import Presentation.Model.Explosion;
 
 public class ExplosionAmpliada implements ExplosionStrategy {
+
+    private int explosionRadius;
+
+    public ExplosionAmpliada() {
+        this.explosionRadius = 1;
+    }
+
+    public int getExplosionRadius() {
+        return this.explosionRadius;
+    }
+
     @Override
     public void explode(Bomb bomb, Floor floor) {
         int eRow = bomb.getRowIndex();
@@ -16,7 +27,7 @@ public class ExplosionAmpliada implements ExplosionStrategy {
         floor.addExplosion(new Explosion(eRow, eCol));
 
         // Corrige los límites para sur y este, y amplía el radio en +1 respecto a ExplosionNormal
-        for (int i = 1; i < bomb.getExplosionRadius() + 2; i++) {
+        for (int i = 1; i < this.getExplosionRadius() + 2; i++) {
             if (eRow - i >= 0 && northOpen) {
                 northOpen = floor.bombCoordinateCheck(eRow - i, eCol, northOpen);
             }

@@ -9,7 +9,7 @@ class BombTest {
 
     @BeforeEach
     void setUp() {
-        bomb = new Bomb(5, 10, 3);
+        bomb = new Bomb(5, 10);
     }
 
     @Test

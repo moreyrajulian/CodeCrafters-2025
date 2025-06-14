@@ -32,6 +32,7 @@ dependencies {
 
 tasks.test {
     useJUnitPlatform()
+    jvmArgs("-javaagent:" + configurations.testRuntimeClasspath.get().find { it.name.contains("mockito-core") }?.absolutePath)
 }
 
 tasks.jar {
