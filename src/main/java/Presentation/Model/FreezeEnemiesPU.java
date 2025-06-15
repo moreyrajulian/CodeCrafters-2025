@@ -55,7 +55,9 @@ private static final int duracion = 5000;
 //    }
 
     @Override
-    public void addToPlayer(Player player) {}
+    public void addToPlayer(Player player) {
+        player.getFloor().notifyObservers(getName(), player);
+    }
 
     /**
      * Obtiene el nombre del PowerUp.
@@ -67,5 +69,3 @@ private static final int duracion = 5000;
     }
 
 }
-
-

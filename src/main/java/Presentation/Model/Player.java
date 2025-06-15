@@ -21,7 +21,6 @@ public class Player extends AbstractCharacter
     public Action up = new AbstractAction() {
 	public void actionPerformed(ActionEvent e) {
 	    movePlayer(Move.UP);
-
 	}
     };
  
@@ -45,7 +44,6 @@ public class Player extends AbstractCharacter
 
 	}
     };
-
 
 	public Action dropBomb = new AbstractAction() {
 		public void actionPerformed(ActionEvent e) {

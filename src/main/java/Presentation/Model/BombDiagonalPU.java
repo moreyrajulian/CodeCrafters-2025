@@ -10,16 +10,12 @@ public class BombDiagonalPU extends AbstractPowerUp {
         super(colIndex, rowIndex);
     }
 
-//    @Override
-//    public void addToPlayer(Player player) {
-//        player.setPowerUpRadius(true);
-//    }
-
     @Override
-    public void addToPlayer(Player player) {}
+    public void addToPlayer(Player player) {
+        player.getFloor().notifyObservers(getName(), player);
+    }
 
     public String getName() {
         return "BombDiagonalPU";
     }
 }
-
