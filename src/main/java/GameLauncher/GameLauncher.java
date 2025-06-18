@@ -62,6 +62,7 @@ public class GameLauncher {
             floor.explosionHandler();
             floor.characterInExplosion();
             floor.notifyListeners();
+            floor.getPlayer().updateMovement();
 
 
             //VERIFICA SI GANASTE MOSTRANDO MENSAJE
