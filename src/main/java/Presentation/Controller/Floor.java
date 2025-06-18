@@ -4,6 +4,7 @@ package Presentation.Controller;
 import Presentation.Controller.FloorListener;
 import Presentation.Model.*;
 import Presentation.View.BombermanComponent;
+import Presentation.Configuracion.GameConfig;
 import Presentation.Model.AbstractCharacter.*;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -387,38 +388,39 @@ public class Floor {
 
 
 	private boolean collidingCircles(AbstractCharacter abstractCharacter, int x, int y){
-		int a = abstractCharacter.getX() - x - BombermanComponent.getSquareMiddle();
-		int b = abstractCharacter.getY() - y - BombermanComponent.getSquareMiddle();
-		int a2 = a * a;
-		int b2 = b * b;
-		double c = Math.sqrt(a2 + b2);
-		return(abstractCharacter.getSize() > c);
-	}
+	int a = abstractCharacter.getX() - x - BombermanComponent.getSquareMiddle();
+	int b = abstractCharacter.getY() - y - BombermanComponent.getSquareMiddle();
+	int a2 = a * a;
+	int b2 = b * b;
+	double c = Math.sqrt(a2 + b2);
+	return(GameConfig.CHARACTERSIZE > c);
+    }
 
-	private boolean squareCircleInstersect(int row, int col, AbstractCharacter abstractCharacter) {
-		//http://stackoverflow.com/questions/401847/circle-rectangle-collision-detection-intersection
-		int characterX = abstractCharacter.getX();
-		int characterY = abstractCharacter.getY();
+    private boolean squareCircleInstersect(int row, int col, AbstractCharacter abstractCharacter) {
+	//http://stackoverflow.com/questions/401847/circle-rectangle-collision-detection-intersection
+	int characterX = abstractCharacter.getX();
+	int characterY = abstractCharacter.getY();
 
-		int circleRadius = abstractCharacter.getSize() / 2;
-		int squareSize = BombermanComponent.getSquareSize();
-		int squareCenterX = (col*squareSize)+(squareSize/2);
-		int squareCenterY = (row*squareSize)+(squareSize/2);
+	int circleRadius = GameConfig.CHARACTERSIZE / 2;
+	int squareSize = BombermanComponent.getSquareSize();
+	int squareCenterX = (col*squareSize)+(squareSize/2);
+	int squareCenterY = (row*squareSize)+(squareSize/2);
 
-		int circleDistanceX = Math.abs(characterX - squareCenterX);
-		int circleDistanceY = Math.abs(characterY - squareCenterY);
+	int circleDistanceX = Math.abs(characterX - squareCenterX);
+	int circleDistanceY = Math.abs(characterY - squareCenterY);
 
-		if (circleDistanceX > (squareSize/2 + circleRadius)) { return false; }
-		if (circleDistanceY > (squareSize/2 + circleRadius)) { return false; }
+	if (circleDistanceX > (squareSize/2 + circleRadius)) { return false; }
+	if (circleDistanceY > (squareSize/2 + circleRadius)) { return false; }
 
-		if (circleDistanceX <= (squareSize/2)) { return true; }
-		if (circleDistanceY <= (squareSize/2)) { return true; }
+	if (circleDistanceX <= (squareSize/2)) { return true; }
+	if (circleDistanceY <= (squareSize/2)) { return true; }
 
-		int cornerDistance = (circleDistanceX - squareSize/2)^2 +
-				(circleDistanceY - squareSize/2)^2;
+	int cornerDistance = (circleDistanceX - squareSize/2)^2 +
+							      (circleDistanceY - squareSize/2)^2;
 
-		return (cornerDistance <= (circleRadius^2));
-	}
+	return (cornerDistance <= (circleRadius^2));
+    }
+
 
 	public void sonidodejuego(String fileName) {
 		try {
