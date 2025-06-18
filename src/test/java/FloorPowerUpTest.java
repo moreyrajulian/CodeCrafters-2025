@@ -1,16 +1,11 @@
 import Presentation.Controller.Floor;
-
-import Presentation.Model.*;
+import Presentation.Model.AbstractPowerUp;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.Collection;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class FloorPowerUpTest {
     private Floor floor;
@@ -21,11 +16,7 @@ public class FloorPowerUpTest {
     public void setUp() throws Exception {
         Floor.resetFloor();
         floor = Floor.getInstance(width, height, 1);
-        // Mockear la lista interna de powerups
-        Collection<AbstractPowerUp> mockPowerupList = Mockito.mock(Collection.class);
-        Field field = Floor.class.getDeclaredField("powerupList");
-        field.setAccessible(true);
-        field.set(floor, mockPowerupList);
+        // Ya no se mockea ni accede a powerupList por reflexión
     }
 
     @Test
@@ -69,10 +60,14 @@ public class FloorPowerUpTest {
             spawnPowerup.invoke(floor, i, 0); // columna izquierda
             spawnPowerup.invoke(floor, i, width - 1); // columna derecha
         }
-        // Verificar que nunca se llamó a add en el mock
-        Field field = Floor.class.getDeclaredField("powerupList");
-        field.setAccessible(true);
-        Collection<AbstractPowerUp> mockPowerupList = (Collection<AbstractPowerUp>) field.get(floor);
-        verify(mockPowerupList, never()).add(any(AbstractPowerUp.class));
+        // Verificar que no se generó ningún power-up en el borde
+        for (AbstractPowerUp pu : floor.getPowerupList()) {
+            int x = pu.getX();
+            int y = pu.getY();
+            int col = x / Presentation.View.BombermanComponent.getSquareSize();
+            int row = y / Presentation.View.BombermanComponent.getSquareSize();
+            assertTrue(row > 0 && row < height - 1 && col > 0 && col < width - 1,
+                    "PowerUp generado en el borde: fila " + row + ", columna " + col);
+        }
     }
 }

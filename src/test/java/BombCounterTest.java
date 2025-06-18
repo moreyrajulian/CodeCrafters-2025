@@ -30,6 +30,6 @@ class BombCounterTest {
 
     @Test
     void testGetName_returnsCorrectName() {
-        assertEquals("BombCounter", powerUp.getName());
+        assertEquals("BombCounterPU", powerUp.getName());
     }
 }

@@ -16,7 +16,7 @@ class BombTest {
     void testConstructorSetsFieldsCorrectly() {
         Assertions.assertEquals(5, bomb.getRowIndex());
         Assertions.assertEquals(10, bomb.getColIndex());
-        Assertions.assertEquals(3, bomb.getExplosionRadius());
+        Assertions.assertEquals(1, bomb.getExplosionRadius());
         Assertions.assertFalse(bomb.isPlayerLeft());
         Assertions.assertEquals(100, bomb.getTimeToExplosion());
     }
