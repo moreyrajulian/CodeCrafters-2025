@@ -1,5 +1,6 @@
 package Presentation.View;
 
+import Presentation.Configuracion.GameConfig;
 import Presentation.Controller.Floor;
 import Presentation.Controller.FloorListener;
 import Presentation.Model.FloorTile;
@@ -41,6 +42,7 @@ public class BombermanComponent extends JComponent implements FloorListener
     private Image bombRadiusImg;
     private Image freezeEnemiesImg;
 	private Image bombdiagonalImg;
+
 
     public BombermanComponent(Floor floor) {
 	this.floor = floor;

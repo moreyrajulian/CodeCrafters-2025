@@ -6,6 +6,8 @@ import Presentation.View.BombermanComponent;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
+import java.util.HashSet;
+import java.util.Set;
 
 
 public class Player extends AbstractCharacter
@@ -17,7 +19,7 @@ public class Player extends AbstractCharacter
     private int bombCount;
     private Floor floor;
 	private PlayerController playerController;
-
+	private Set<String> teclasPresionadas = new HashSet<>();
     public Action up = new AbstractAction() {
 	public void actionPerformed(ActionEvent e) {
 	    movePlayer(Move.UP);
@@ -45,6 +47,7 @@ public class Player extends AbstractCharacter
 	}
     };
 
+
 	public Action dropBomb = new AbstractAction() {
 		public void actionPerformed(ActionEvent e) {
 			playerController.dropBomb(getRowIndex(), getColIndex(), getBombCount());
@@ -60,18 +63,75 @@ public class Player extends AbstractCharacter
 		setPlayerButtons(bombermanComponent);
     }
 
-    public void setPlayerButtons(BombermanComponent bombermanComponent) {
-		bombermanComponent.getInputMap().put(KeyStroke.getKeyStroke("RIGHT"), "moveRight");
-		bombermanComponent.getInputMap().put(KeyStroke.getKeyStroke("LEFT"), "moveLeft");
-		bombermanComponent.getInputMap().put(KeyStroke.getKeyStroke("UP"), "moveUp");
-		bombermanComponent.getInputMap().put(KeyStroke.getKeyStroke("DOWN"), "moveDown");
-		bombermanComponent.getInputMap().put(KeyStroke.getKeyStroke("SPACE"), "dropBomb");
-		bombermanComponent.getActionMap().put("moveRight", right);
-		bombermanComponent.getActionMap().put("moveLeft", left);
-		bombermanComponent.getActionMap().put("moveUp", up);
-		bombermanComponent.getActionMap().put("moveDown", down);
+	public void setPlayerButtons(BombermanComponent bombermanComponent){
+		// Presionar
+		bombermanComponent.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
+				.put(KeyStroke.getKeyStroke("pressed RIGHT"), "pressRight");
+		bombermanComponent.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
+				.put(KeyStroke.getKeyStroke("pressed LEFT"), "pressLeft");
+		bombermanComponent.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
+				.put(KeyStroke.getKeyStroke("pressed UP"), "pressUp");
+		bombermanComponent.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
+				.put(KeyStroke.getKeyStroke("pressed DOWN"), "pressDown");
+
+		// Soltar
+		bombermanComponent.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
+				.put(KeyStroke.getKeyStroke("released RIGHT"), "releaseRight");
+		bombermanComponent.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
+				.put(KeyStroke.getKeyStroke("released LEFT"), "releaseLeft");
+		bombermanComponent.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
+				.put(KeyStroke.getKeyStroke("released UP"), "releaseUp");
+		bombermanComponent.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
+				.put(KeyStroke.getKeyStroke("released DOWN"), "releaseDown");
+
+		// Acciones para presionar
+		bombermanComponent.getActionMap().put("pressRight", new AbstractAction() {
+			public void actionPerformed(ActionEvent e) { teclasPresionadas.add("RIGHT"); }
+		});
+		bombermanComponent.getActionMap().put("pressLeft", new AbstractAction() {
+			public void actionPerformed(ActionEvent e) { teclasPresionadas.add("LEFT"); }
+		});
+		bombermanComponent.getActionMap().put("pressUp", new AbstractAction() {
+			public void actionPerformed(ActionEvent e) { teclasPresionadas.add("UP"); }
+		});
+		bombermanComponent.getActionMap().put("pressDown", new AbstractAction() {
+			public void actionPerformed(ActionEvent e) { teclasPresionadas.add("DOWN"); }
+		});
+
+		// Acciones para soltar
+		bombermanComponent.getActionMap().put("releaseRight", new AbstractAction() {
+			public void actionPerformed(ActionEvent e) { teclasPresionadas.remove("RIGHT"); }
+		});
+		bombermanComponent.getActionMap().put("releaseLeft", new AbstractAction() {
+			public void actionPerformed(ActionEvent e) { teclasPresionadas.remove("LEFT"); }
+		});
+		bombermanComponent.getActionMap().put("releaseUp", new AbstractAction() {
+			public void actionPerformed(ActionEvent e) { teclasPresionadas.remove("UP"); }
+		});
+		bombermanComponent.getActionMap().put("releaseDown", new AbstractAction() {
+			public void actionPerformed(ActionEvent e) { teclasPresionadas.remove("DOWN"); }
+		});
+
+		// Bomba (solo al presionar)
+		bombermanComponent.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
+				.put(KeyStroke.getKeyStroke("pressed SPACE"), "dropBomb");
 		bombermanComponent.getActionMap().put("dropBomb", dropBomb);
-    }
+	}
+
+	public void updateMovement() {
+		if (teclasPresionadas.contains("RIGHT")) {
+			movePlayer(Move.RIGHT);
+		}
+		if (teclasPresionadas.contains("LEFT")) {
+			movePlayer(Move.LEFT);
+		}
+		if (teclasPresionadas.contains("UP")) {
+			movePlayer(Move.UP);
+		}
+		if (teclasPresionadas.contains("DOWN")) {
+			movePlayer(Move.DOWN);
+		}
+	}
 
     public int getBombCount() {
 		return bombCount;

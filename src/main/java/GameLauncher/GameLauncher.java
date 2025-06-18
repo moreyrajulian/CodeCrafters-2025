@@ -7,14 +7,14 @@ import Presentation.View.BombermanFrame;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 
-
 public class GameLauncher {
     private static final int TIME_STEP = 30;
     private static int width = 25;
     private static int height = 15;
-    private static int nrOfEnemies = 5;
+    private static int nrOfEnemies = 1;
     private static Timer clockTimer = null;
     private static MP3Player music;
+
 
     public static void main(String[] args) {
         startGame();
@@ -39,10 +39,11 @@ public class GameLauncher {
         clockTimer.start();
         music = new MP3Player("background.mp3");
         music.start();
+
     }
 
     private static void gameOver(BombermanFrame frame, Floor floor) {
-        if(music!=null) {
+        if(music!=null){
             music.stop();
         }
         clockTimer.stop();
@@ -61,6 +62,7 @@ public class GameLauncher {
             floor.explosionHandler();
             floor.characterInExplosion();
             floor.notifyListeners();
+            floor.getPlayer().updateMovement();
 
 
             //VERIFICA SI GANASTE MOSTRANDO MENSAJE

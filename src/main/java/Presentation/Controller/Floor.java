@@ -1,15 +1,9 @@
 package Presentation.Controller;
 
-
 import Presentation.Model.*;
-import Presentation.Model.AbstractCharacter.Move;
 import Presentation.Model.Observer.Observable;
 import Presentation.Model.Observer.Observador;
 import Presentation.View.BombermanComponent;
-
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -224,18 +218,18 @@ public class Floor implements Observable {
     }
 
 
-    private void placeUnbreakableAndGrass() {
-        for (int i = 0; i < height; i++) {
-            for (int j = 0; j < width; j++) {
-                //Makes frame of unbreakable
-                if ((i == 0) || (j == 0) || (i == height - 1) || (j == width - 1) || i % 2 == 0 && j % 2 == 0) {
-                    tiles[i][j] = FloorTile.UNBREAKABLEBLOCK;
-                    //Every-other unbreakable
-                } else if (tiles[i][j] != FloorTile.BREAKABLEBLOCK) {
-                    tiles[i][j] = FloorTile.FLOOR;
-                }
-            }
-        }
+	private void placeUnbreakableAndGrass () {
+	for (int i = 0; i < height; i++) {
+	    for (int j = 0; j < width; j++) {
+		//Makes frame of unbreakable
+		if ((i == 0) || (j == 0) || (i == height - 1) || (j == width - 1) || i % 2 == 0 && j % 2 == 0) {
+		    tiles[i][j] = FloorTile.UNBREAKABLEBLOCK;
+		    //Every-other unbreakable
+		} else if (tiles[i][j] != FloorTile.BREAKABLEBLOCK) {
+		    tiles[i][j] = FloorTile.FLOOR;
+		}
+	    }
+	}
     }
 
 

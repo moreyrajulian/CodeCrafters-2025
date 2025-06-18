@@ -38,7 +38,7 @@ public class BombermanFrame extends JFrame {
 
     private void setKeyStrokes() {
 
-	KeyStroke stroke = KeyStroke.getKeyStroke(KeyEvent.VK_W, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask());
+	KeyStroke stroke = KeyStroke.getKeyStroke(KeyEvent.VK_W, Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx());
 	bombermanComponent.getInputMap().put(stroke, "q");
 	bombermanComponent.getActionMap().put("q", quit);
     }
@@ -47,7 +47,6 @@ public class BombermanFrame extends JFrame {
     {
 	public void actionPerformed(ActionEvent e) {
 		dispose();
-	    
 	}
     };
 }
