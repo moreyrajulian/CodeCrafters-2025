@@ -1,9 +1,10 @@
 package Presentation.Model;
 
+import Presentation.Controller.Floor;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import Presentation.Controller.Floor;
 
 public class BombManager {
     private List<Bomb> bombList = new ArrayList<>();
@@ -56,7 +57,7 @@ public class BombManager {
         }
     }
 
-    public void explosionHandler(Presentation.Controller.Floor floor) {
+    public void explosionHandler(Floor floor) {
         Collection<Explosion> explosionsToBeRemoved = new ArrayList<>();
         for (Explosion e : explosionCoords) {
             e.setDuration(e.getDuration() - 1);

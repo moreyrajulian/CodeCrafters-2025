@@ -1,6 +1,5 @@
 package Presentation.View;
 
-import Presentation.Configuracion.GameConfig;
 import Presentation.Controller.Floor;
 import Presentation.Controller.FloorListener;
 import Presentation.Model.FloorTile;
@@ -49,8 +48,8 @@ public class BombermanComponent extends JComponent implements FloorListener
 
 	imageMap = new EnumMap<>(FloorTile.class);
 	try{
-		imageMap.put(FloorTile.FLOOR, ImageIO.read(getClass().getResource("/Tiles/ground.png")));
-		imageMap.put(FloorTile.UNBREAKABLEBLOCK, ImageIO.read(getClass().getResource("/Tiles/pared.png")));
+		imageMap.put(FloorTile.FLOOR, ImageIO.read(getClass().getResource("/Tiles/piso.png")));
+		imageMap.put(FloorTile.UNBREAKABLEBLOCK, ImageIO.read(getClass().getResource("/Tiles/paredd.png")));
 		imageMap.put(FloorTile.BREAKABLEBLOCK, ImageIO.read(getClass().getResource("/Tiles/breakableblock.png")));
         enemyImg = ImageIO.read(getClass().getResource("/Tiles/enemy.png"));
         bombCounterImg = ImageIO.read(getClass().getResource("/Tiles/bomb_counter.png"));
