@@ -30,30 +30,6 @@ private static final int duracion = 5000;
      * @param player El jugador al que se le aplicará el PowerUp.
      */
 
-//    @Override
-//    public void addToPlayer(Player player)
-//    {
-//        Floor floor = player.getFloor();
-//
-//        // Congelar todos los enemigos (velocidad = 0)
-//
-//        for (Enemy enemy: floor.getEnemyList()){
-//            enemy.setPixelsPerStep(0);
-//            enemy.setCambioVelocidadTemp();
-//        }
-//        // Programa una tarea para descongelar a los enemigos después de la duración
-//        new Timer().schedule(new TimerTask() {
-//            @Override
-//            public void run() {
-//                // Descongelar enemigos
-//                for (Enemy enemy : floor.getEnemyList()) {
-//                    enemy.clearCambioVelocidadTemp();
-//                }
-//            }
-//        }, duracion);
-//
-//    }
-
     @Override
     public void addToPlayer(Player player) {
         player.getFloor().notifyObservers(getName(), player);
