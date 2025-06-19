@@ -1,437 +1,366 @@
 package Presentation.Controller;
 
-
-import Presentation.Controller.FloorListener;
 import Presentation.Model.*;
+import Presentation.Model.Observer.Observable;
+import Presentation.Model.Observer.Observador;
 import Presentation.View.BombermanComponent;
-import Presentation.Configuracion.GameConfig;
-import Presentation.Model.AbstractCharacter.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import javax.sound.sampled.*;
 
 
-public class Floor {
-	// Constants are static by definition.
-	private final static double CHANCE_FOR_BREAKABLE_BLOCK = 0.3;
-	private final static double CHANCE_FOR_RADIUS_POWERUP = 0.2;
-	private final static double CHANCE_FOR_COUNTER_POWERUP = 0.8;
-	private final FloorTile[][] tiles;
-	private int width;
-	private int height;
-	private Collection<FloorListener> floorListeners = new ArrayList<>();
-	private Player player = null;
-	private Collection<Enemy> enemyList = new ArrayList<>();
-	private List<Bomb> bombList= new ArrayList<>();
-	private Collection<AbstractPowerUp> powerupList = new ArrayList<>();
-	private Collection<Bomb> explosionList= new ArrayList<>();
-	private Collection<Explosion> explosionCoords= new ArrayList<>();
-	private boolean isGameOver = false;
-	private static Floor instance;
+public class Floor implements Observable {
+    // Constants are static by definition.
+    private final static double CHANCE_FOR_BREAKABLE_BLOCK = 0.3;
+    private final static double CHANCE_FOR_RADIUS_POWERUP = 0.2;
+    private final static double CHANCE_FOR_COUNTER_POWERUP = 0.8;
+    private final FloorTile[][] tiles;
+    private int width;
+    private int height;
+    private Player player = null;
+    private EnemyManager enemyManager;
+    private BombManager bombManager;
+    private PowerUpManager powerUpManager = new PowerUpManager();
+    private boolean isGameOver = false;
+    private List<Observador> observers = new ArrayList<>();
+    private static Floor instance;
+    private SoundManager soundManager = new SoundManager();
+    private List<FloorListener> floorListeners = new ArrayList<>();
 
-	private Floor(int width, int height, int nrOfEnemies) {
-		this.width = width;
-		this.height = height;
-		this.tiles = new FloorTile[height][width];
-		placeBreakable();
-		placeUnbreakableAndGrass();
-		spawnEnemies(nrOfEnemies);
-	}
+    private Floor(int width, int height, int nrOfEnemies) {
+        this.width = width;
+        this.height = height;
+        this.tiles = new FloorTile[height][width];
+        placeBreakable();
+        placeUnbreakableAndGrass();
+        this.enemyManager = new EnemyManager();
+        this.enemyManager.spawnEnemies(nrOfEnemies, width, height, tiles, this);
+        addObserver(enemyManager);
+        this.bombManager = new BombManager(soundManager);
+    }
 
-	public static Floor getInstance(int width, int height, int nrOfEnemies) {
-		if (instance == null) {
-			instance = new Floor(width, height, nrOfEnemies);
-		}
-		return instance;
-	}
+    public static Floor getInstance(int width, int height, int nrOfEnemies) {
+        if (instance == null) {
+            instance = new Floor(width, height, nrOfEnemies);
+        }
+        return instance;
+    }
 
-	public static int pixelToSquare(int pixelCoord){
-		return ((pixelCoord + BombermanComponent.getSquareSize()-1) / BombermanComponent.getSquareSize())-1;
-	}
+    public static void resetFloor() {
+        instance = null;
+    }
 
-	public FloorTile getFloorTile(int rowIndex, int colIndex) {
-		return tiles[rowIndex][colIndex];
-	}
+    @Override
+    public void addObserver(Observador o) {
+        observers.add(o);
+    }
 
-	public int getWidth() {
-		return width;
-	}
+    @Override
+    public void removeObserver(Observador o) {
+        observers.remove(o);
+    }
 
-	public int getHeight() {
-		return height;
-	}
+    @Override
+    public void notifyObservers(String s, Player player) {
+        for (Observador o : observers) {
+            o.update(s, player);
+        }
+    }
 
-	public Player getPlayer() {
-		return player;
-	}
+    public static int pixelToSquare(int pixelCoord) {
+        return ((pixelCoord + BombermanComponent.getSquareSize() - 1) / BombermanComponent.getSquareSize()) - 1;
+    }
 
-	public Collection<Enemy> getEnemyList() {
-		return enemyList;
-	}
+    public FloorTile getFloorTile(int rowIndex, int colIndex) {
+        return tiles[rowIndex][colIndex];
+    }
 
-	public Iterable<Bomb> getBombList() {
-		return bombList;
-	}
+    public int getWidth() {
+        return width;
+    }
 
-	public int getBombListSize() {
-		return bombList.size();
-	}
+    public int getHeight() {
+        return height;
+    }
 
-	public Iterable<AbstractPowerUp> getPowerupList() {
-		return powerupList;
-	}
+    public Player getPlayer() {
+        return player;
+    }
 
-	public Iterable<Explosion> getExplosionCoords() {
-		return explosionCoords;
-	}
+    public Collection<Enemy> getEnemyList() {
+        return enemyManager.getEnemies();
+    }
 
-	public boolean getIsGameOver() {
-		return isGameOver;
-	}
+    public Iterable<Bomb> getBombList() {
+        return bombManager.getBombList();
+    }
 
-	public void setIsGameOver(boolean value) {
-		isGameOver = value;
-	}
+    public int getBombListSize() {
+        return bombManager.getBombListSize();
+    }
 
-	public void addToBombList(Bomb bomb) {
-		bombList.add(bomb);
-	}
+    public Iterable<AbstractPowerUp> getPowerupList() {
+        return powerUpManager.getPowerupList();
+    }
 
-	public void createPlayer(BombermanComponent bombermanComponent, Floor floor){
-		player = new Player(bombermanComponent, floor);
-	}
+    public Iterable<Explosion> getExplosionCoords() {
+        return bombManager.getExplosionCoords();
+    }
 
-	public int squareToPixel(int squareCoord){
-		return squareCoord * BombermanComponent.getSquareSize();
-	}
+    public boolean getIsGameOver() {
+        return isGameOver;
+    }
 
-	public void moveEnemies() {
-		if (enemyList.isEmpty()) {
-			isGameOver = true;
-		}
-		for (Enemy e: enemyList){
-			Move currentDirection = e.getCurrentDirection();
+    public void setIsGameOver(boolean value) {
+        isGameOver = value;
+    }
 
-			if (currentDirection == Move.DOWN) {
-				e.move(Move.DOWN);
-			} else if (currentDirection == Move.UP) {
-				e.move(Move.UP);
-			} else if (currentDirection == Move.LEFT) {
-				e.move(Move.LEFT);
-			} else {
-				e.move(Move.RIGHT);
-			}
+    public void addToBombList(Bomb bomb) {
+        bombManager.addBomb(bomb);
+    }
 
-			if (collisionWithBlock(e)) {
-				e.changeDirection();
-			}
+    public void createPlayer(BombermanComponent bombermanComponent, Floor floor) {
+        player = new Player(bombermanComponent, floor);
+    }
 
-			if (collisionWithBombs(e)) {
-				e.changeDirection();
-			}
+    public int squareToPixel(int squareCoord) {
+        return squareCoord * BombermanComponent.getSquareSize();
+    }
 
-			if (collisionWithEnemies()) {
-				isGameOver = true;
-			}
-		}
-	}
+    public void moveEnemies() {
+        enemyManager.moveEnemies(this);
+    }
 
-	public void addFloorListener(FloorListener bl) {
-		floorListeners.add(bl);
-	}
+    /**
+     * This method creates a bomb if the given demands are satisfied.
+     */
+    public void bombCountdown() {
+        bombManager.bombCountdown();
+    }
 
-	public void notifyListeners() {
-		for (FloorListener b : floorListeners) {
-			b.floorChanged();
-		}
-	}
+    public void explosionHandler() {
+        bombManager.explosionHandler(this);
+    }
 
-	/**
-	 * This method creates a bomb if the given demands are satisfied.
-	 */
-	public void bombCountdown(){
-		Collection<Integer> bombIndexesToBeRemoved = new ArrayList<>();
-		explosionList.clear();
-		int index = 0;
-		for (Bomb b: bombList) {
-			b.setTimeToExplosion(b.getTimeToExplosion() - 1);
-			if(b.getTimeToExplosion() == 0){
-				bombIndexesToBeRemoved.add(index);
-				explosionList.add(b);
-			}
-			index++;
-		}
-		for (int i: bombIndexesToBeRemoved){bombList.remove(i);}
-	}
+    public void addExplosion(Explosion explosion) {
+        bombManager.addExplosion(explosion);
+    }
 
-	public void explosionHandler(){
-		Collection<Explosion> explosionsToBeRemoved = new ArrayList<>();
-		for (Explosion e:explosionCoords) {
-			e.setDuration(e.getDuration()-1);
-			if(e.getDuration()==0){
-				explosionsToBeRemoved.add(e);
-			}
-		}
-		for (Explosion e: explosionsToBeRemoved){
-			explosionCoords.remove(e);
-			sonidodejuego("explosion.wav");
-		}
+    public void playerInExplosion() {
+        for (Explosion tup : bombManager.getExplosionCoords()) {
+            if (collidingCircles(player, squareToPixel(tup.getColIndex()), squareToPixel(tup.getRowIndex()))) {
+                isGameOver = true;
+            }
+        }
+    }
 
-		for (Bomb e: explosionList) {
-			int eRow = e.getRowIndex();
-			int eCol = e.getColIndex();
-			boolean northOpen = true;
-			boolean southOpen = true;
-			boolean westOpen = true;
-			boolean eastOpen = true;
-			explosionCoords.add(new Explosion(eRow, eCol));
-			for (int i = 1; i < e.getExplosionRadius()+1; i++) {
-				if (eRow - i >= 0 && northOpen) {
-					northOpen = bombCoordinateCheck(eRow-i, eCol, northOpen);
-				}
-				if (eRow - i <= height && southOpen) {
-					southOpen = bombCoordinateCheck(eRow+i, eCol, southOpen);
-				}
-				if (eCol - i >= 0 && westOpen) {
-					westOpen = bombCoordinateCheck(eRow, eCol-i, westOpen);
-				}
-				if (eCol + i <= width && eastOpen) {
-					eastOpen = bombCoordinateCheck(eRow, eCol+i, eastOpen);
-				}
-			}
-		}
-	}
+    public void enemyInExplosion() {
+        for (Explosion tup : bombManager.getExplosionCoords()) {
+            Collection<Enemy> enemiesToBeRemoved = new ArrayList<>();
+            for (Enemy e : enemyManager.getEnemies()) {
+                if (collidingCircles(e, squareToPixel(tup.getColIndex()), squareToPixel(tup.getRowIndex()))) {
+                    enemiesToBeRemoved.add(e);
+                    soundManager.playSound("muerte_de_enemigo.wav");
+                }
+            }
+            for (Enemy e : enemiesToBeRemoved) {
+                enemyManager.removeEnemy(e);
+            }
+        }
+    }
 
-	public void playerInExplosion(){
-		for (Explosion tup:explosionCoords) {
-			if(collidingCircles(player, squareToPixel(tup.getColIndex()), squareToPixel(tup.getRowIndex()))){
-				isGameOver = true;
-			}
-		}
-	}
+    public void characterInExplosion() {
+        playerInExplosion();
+        enemyInExplosion();
+    }
 
-	public void enemyInExplosion(){
-		for (Explosion tup:explosionCoords) {
-			Collection<Enemy> enemiesToBeRemoved = new ArrayList<>();
-			for (Enemy e : enemyList) {
-				if(collidingCircles(e, squareToPixel(tup.getColIndex()), squareToPixel(tup.getRowIndex()))){
-					enemiesToBeRemoved.add(e);
-					sonidodejuego("muerte_de_enemigo.wav");
-				}
-			}
-			for (Enemy e: enemiesToBeRemoved ) {
-				enemyList.remove(e);
-			}
-		}
-	}
+    private void placeBreakable() {
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
+                double r = Math.random();
+                if (r < CHANCE_FOR_BREAKABLE_BLOCK) {
+                    tiles[i][j] = FloorTile.BREAKABLEBLOCK;
+                }
+            }
+        }
+        clearSpawn();
+    }
 
-	public void characterInExplosion(){
-		playerInExplosion();
-		enemyInExplosion();
-	}
+    private void clearSpawn() {
+        tiles[1][1] = FloorTile.FLOOR;
+        tiles[1][2] = FloorTile.FLOOR;
+        tiles[2][1] = FloorTile.FLOOR;
+    }
 
-	private void placeBreakable () {
-		for (int i = 0; i < height; i++) {
-			for (int j = 0; j < width; j++) {
-				double r = Math.random();
-				if (r < CHANCE_FOR_BREAKABLE_BLOCK) {
-					tiles[i][j] = FloorTile.BREAKABLEBLOCK;
-				}
-			}
-		}
-		clearSpawn();
-	}
+    private void spawnPowerup(int rowIndex, int colIndex) {
 
-	private void clearSpawn () {
-		tiles[1][1] = FloorTile.FLOOR;
-		tiles[1][2] = FloorTile.FLOOR;
-		tiles[2][1] = FloorTile.FLOOR;
-	}
-
-	private void spawnPowerup(int rowIndex, int colIndex) {
-		double r = Math.random();
-		int x = squareToPixel(colIndex) + BombermanComponent.getSquareMiddle();
-		int y = squareToPixel(rowIndex) + BombermanComponent.getSquareMiddle();
-
-		if (r < 0.3) {
-			powerupList.add(new BombRadiusPU(x, y));
-		} else if (r < 0.6) {
-			powerupList.add(new BombCounterPU(x, y));
-		} else if (r < 0.8) {
-			powerupList.add(new FreezeEnemiesPU(x, y));
-		}
-	}
+        // Evitar el contorno del mapa (filas y columnas no accesibles)
+        if (rowIndex <= 0 || rowIndex >= (height - 1) || colIndex <= 0 || colIndex >= (width - 1)) {
+            System.out.println("Contorno del mapa, no se coloca powerup " + rowIndex + ", " + colIndex);
+            return;
+        }
+        double r = Math.random();
+        int x = squareToPixel(rowIndex) + BombermanComponent.getSquareMiddle();
+        int y = squareToPixel(colIndex) + BombermanComponent.getSquareMiddle();
+        if (r < 0.25) {
+            powerUpManager.addPowerUp(new BombRadiusPU(x, y));
+            System.out.println("Powerup BombRadiusPU colocado en: (" + rowIndex + ", " + colIndex + ")");
+        } else if (r < 0.5) {
+            powerUpManager.addPowerUp(new BombCounterPU(x, y));
+            System.out.println("Powerup BombCounterPU colocado en: (" + rowIndex + ", " + colIndex + ")");
+        } else if (r < 0.75) {
+            powerUpManager.addPowerUp(new FreezeEnemiesPU(x, y));
+            System.out.println("Powerup FreezeEnemiesPU colocado en: (" + rowIndex + ", " + colIndex + ")");
+        } else {
+            powerUpManager.addPowerUp(new BombDiagonalPU(x, y));
+            System.out.println("Powerup BombDiagonalPU colocado en: (" + rowIndex + ", " + colIndex + ")");
+        }
+    }
 
 
 	private void placeUnbreakableAndGrass () {
-		for (int i = 0; i < height; i++) {
-			for (int j = 0; j < width; j++) {
-				//Makes frame of unbreakable
-				if ((i == 0) || (j == 0) || (i == height - 1) || (j == width - 1) || i % 2 == 0 && j % 2 == 0) {
-					tiles[i][j] = FloorTile.UNBREAKABLEBLOCK;
-					//Every-other unbreakable
-				} else if (tiles[i][j] != FloorTile.BREAKABLEBLOCK) {
-					tiles[i][j] = FloorTile.FLOOR;
-				}
-			}
+	for (int i = 0; i < height; i++) {
+	    for (int j = 0; j < width; j++) {
+		//Makes frame of unbreakable
+		if ((i == 0) || (j == 0) || (i == height - 1) || (j == width - 1) || i % 2 == 0 && j % 2 == 0) {
+		    tiles[i][j] = FloorTile.UNBREAKABLEBLOCK;
+		    //Every-other unbreakable
+		} else if (tiles[i][j] != FloorTile.BREAKABLEBLOCK) {
+		    tiles[i][j] = FloorTile.FLOOR;
 		}
+	    }
 	}
-
-	private void spawnEnemies (int nrOfEnemies) {
-		for (int e = 0; e < nrOfEnemies; e++){
-			while(true) {
-				int randRowIndex = 1 + (int) (Math.random() * (height - 2));
-				int randColIndex = 1 + (int) (Math.random() * (width - 2));
-				if(getFloorTile(randRowIndex, randColIndex) != FloorTile.FLOOR){
-					continue;
-				}
-				if(randRowIndex==1&&randColIndex==1||randRowIndex==1&&randColIndex==2||randRowIndex==2&&randColIndex==1){
-					continue;
-				}
-				if((randRowIndex % 2)==0){
-					enemyList.add(new Enemy(squareToPixel(randColIndex) + BombermanComponent.getSquareMiddle(), squareToPixel(randRowIndex) + BombermanComponent.getSquareMiddle(), true));
-				}
-				else{
-					enemyList.add(new Enemy(squareToPixel(randColIndex) + BombermanComponent.getSquareMiddle(), squareToPixel(randRowIndex) + BombermanComponent.getSquareMiddle(), false));
-				}
-				break;
-			}
-		}
-	}
+    }
 
 
+    public boolean collisionWithEnemies() {
+        for (Enemy enemy : enemyManager.getEnemies()) {
+            if (collidingCircles(player, enemy.getX() - BombermanComponent.getSquareMiddle(), enemy.getY() - BombermanComponent.getSquareMiddle())) {
+                return true;
+            }
+        }
+        return false;
+    }
 
-	public boolean collisionWithEnemies(){
-		for (Enemy enemy : enemyList) {
-			if(collidingCircles(player, enemy.getX()- BombermanComponent.getSquareMiddle(), enemy.getY()- BombermanComponent.getSquareMiddle())){
-				return true;
-			}
-		}
-		return false;
-	}
+    public boolean collisionWithBombs(AbstractCharacter abstractCharacter) {
+        boolean playerLeftBomb = true;
 
-	public boolean collisionWithBombs(AbstractCharacter abstractCharacter) {
-		boolean playerLeftBomb = true;
-
-		for (Bomb bomb : bombList) {
-			if (abstractCharacter instanceof Player) {
-				playerLeftBomb = bomb.isPlayerLeft();
-			}
-			if(playerLeftBomb && collidingCircles(abstractCharacter, squareToPixel(bomb.getColIndex()), squareToPixel(bomb.getRowIndex()))){
-				return true;
-			}
-		}
-		return false;
-	}
-
-
-	public boolean collisionWithBlock(AbstractCharacter abstractCharacter){
-		//Maybe create if statements to only check nearby squares
-		for (int i = 0; i < height; i++) {
-			for (int j = 0; j < width; j++) {
-				if(getFloorTile(i, j) != FloorTile.FLOOR){
-					boolean isIntersecting = squareCircleInstersect(i, j, abstractCharacter);
-					if (isIntersecting) {
-						return true;
-					}
-				}
-			}
-		}
-		return false;
-	}
-
-	public void collisionWithPowerup() {
-		for (AbstractPowerUp powerup : powerupList) {
-			if(collidingCircles(player, powerup.getX()- BombermanComponent.getSquareMiddle(), powerup.getY()- BombermanComponent.getSquareMiddle())){
-				powerup.addToPlayer(player);
-				powerupList.remove(powerup);
-				break;
-			}
-		}
-	}
+        for (Bomb bomb : bombManager.getBombList()) {
+            if (abstractCharacter instanceof Player) {
+                playerLeftBomb = bomb.isPlayerLeft();
+            }
+            if (playerLeftBomb && collidingCircles(abstractCharacter, squareToPixel(bomb.getColIndex()), squareToPixel(bomb.getRowIndex()))) {
+                return true;
+            }
+        }
+        return false;
+    }
 
 
-
-	public boolean squareHasBomb(int rowIndex, int colIndex){
-		for (Bomb b: bombList) {
-			if(b.getRowIndex()==rowIndex && b.getColIndex()==colIndex){
-				return true;
-			}
-		}
-		return false;
-	}
-
-
-	public void checkIfPlayerLeftBomb(){
-		for (Bomb bomb: bombList) {
-			if(!bomb.isPlayerLeft()){
-				if(!collidingCircles(player, squareToPixel(bomb.getColIndex()), squareToPixel(bomb.getRowIndex()))){
-					bomb.setPlayerLeft(true);
-				}
-			}
-		}
-	}
-
-	private boolean bombCoordinateCheck(int eRow, int eCol, boolean open) {
-		if (tiles[eRow][eCol] == FloorTile.BREAKABLEBLOCK) {
-			tiles[eRow][eCol] = FloorTile.FLOOR;
-			spawnPowerup(eRow, eCol);
-		}
-
-		if (tiles[eRow][eCol] != FloorTile.UNBREAKABLEBLOCK) {
-			explosionCoords.add(new Explosion(eRow, eCol));
-		}
-
-		return tiles[eRow][eCol] == FloorTile.FLOOR ? open : false;
-	}
+    public boolean collisionWithBlock(AbstractCharacter abstractCharacter) {
+        //Maybe create if statements to only check nearby squares
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
+                if (getFloorTile(i, j) != FloorTile.FLOOR) {
+                    boolean isIntersecting = squareCircleInstersect(i, j, abstractCharacter);
+                    if (isIntersecting) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
 
 
-	private boolean collidingCircles(AbstractCharacter abstractCharacter, int x, int y){
-	int a = abstractCharacter.getX() - x - BombermanComponent.getSquareMiddle();
-	int b = abstractCharacter.getY() - y - BombermanComponent.getSquareMiddle();
-	int a2 = a * a;
-	int b2 = b * b;
-	double c = Math.sqrt(a2 + b2);
-	return(GameConfig.CHARACTERSIZE > c);
+    public void collisionWithPowerup() {
+        powerUpManager.checkCollisionWithPlayer(player);
+    }
+
+
+    public boolean squareHasBomb(int rowIndex, int colIndex) {
+        for (Bomb b : bombManager.getBombList()) {
+            if (b.getRowIndex() == rowIndex && b.getColIndex() == colIndex) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+    public void checkIfPlayerLeftBomb() {
+        for (Bomb bomb : bombManager.getBombList()) {
+            if (!bomb.isPlayerLeft()) {
+                if (!collidingCircles(player, squareToPixel(bomb.getColIndex()), squareToPixel(bomb.getRowIndex()))) {
+                    bomb.setPlayerLeft(true);
+                }
+            }
+        }
+    }
+
+    public boolean bombCoordinateCheck(int eRow, int eCol, boolean open) {
+        if (tiles[eRow][eCol] == FloorTile.BREAKABLEBLOCK) {
+            tiles[eRow][eCol] = FloorTile.FLOOR;
+            spawnPowerup(eRow, eCol);
+        }
+
+        if (tiles[eRow][eCol] != FloorTile.UNBREAKABLEBLOCK) {
+            bombManager.addExplosion(new Explosion(eRow, eCol));
+        }
+
+        return tiles[eRow][eCol] == FloorTile.FLOOR ? open : false;
+    }
+
+
+    private boolean collidingCircles(AbstractCharacter abstractCharacter, int x, int y) {
+        int a = abstractCharacter.getX() - x - BombermanComponent.getSquareMiddle();
+        int b = abstractCharacter.getY() - y - BombermanComponent.getSquareMiddle();
+        int a2 = a * a;
+        int b2 = b * b;
+        double c = Math.sqrt(a2 + b2);
+        return (abstractCharacter.getSize() > c);
     }
 
     private boolean squareCircleInstersect(int row, int col, AbstractCharacter abstractCharacter) {
-	//http://stackoverflow.com/questions/401847/circle-rectangle-collision-detection-intersection
-	int characterX = abstractCharacter.getX();
-	int characterY = abstractCharacter.getY();
+        //http://stackoverflow.com/questions/401847/circle-rectangle-collision-detection-intersection
+        int characterX = abstractCharacter.getX();
+        int characterY = abstractCharacter.getY();
 
-	int circleRadius = GameConfig.CHARACTERSIZE / 2;
-	int squareSize = BombermanComponent.getSquareSize();
-	int squareCenterX = (col*squareSize)+(squareSize/2);
-	int squareCenterY = (row*squareSize)+(squareSize/2);
+        int circleRadius = abstractCharacter.getSize() / 2;
+        int squareSize = BombermanComponent.getSquareSize();
+        int squareCenterX = (col * squareSize) + (squareSize / 2);
+        int squareCenterY = (row * squareSize) + (squareSize / 2);
 
-	int circleDistanceX = Math.abs(characterX - squareCenterX);
-	int circleDistanceY = Math.abs(characterY - squareCenterY);
+        int circleDistanceX = Math.abs(characterX - squareCenterX);
+        int circleDistanceY = Math.abs(characterY - squareCenterY);
 
-	if (circleDistanceX > (squareSize/2 + circleRadius)) { return false; }
-	if (circleDistanceY > (squareSize/2 + circleRadius)) { return false; }
+        if (circleDistanceX > (squareSize / 2 + circleRadius)) {
+            return false;
+        }
+        if (circleDistanceY > (squareSize / 2 + circleRadius)) {
+            return false;
+        }
 
-	if (circleDistanceX <= (squareSize/2)) { return true; }
-	if (circleDistanceY <= (squareSize/2)) { return true; }
+        if (circleDistanceX <= (squareSize / 2)) {
+            return true;
+        }
+        if (circleDistanceY <= (squareSize / 2)) {
+            return true;
+        }
 
-	int cornerDistance = (circleDistanceX - squareSize/2)^2 +
-							      (circleDistanceY - squareSize/2)^2;
+        int cornerDistance = (circleDistanceX - squareSize / 2) ^ 2 +
+                (circleDistanceY - squareSize / 2) ^ 2;
 
-	return (cornerDistance <= (circleRadius^2));
+        return (cornerDistance <= (circleRadius ^ 2));
     }
 
+    public void addFloorListener(FloorListener bl) {
+        floorListeners.add(bl);
+    }
 
-	public void sonidodejuego(String fileName) {
-		try {
-			AudioInputStream audioIn = AudioSystem.getAudioInputStream(getClass().getResource("/sounds/" + fileName));
-			Clip clip = AudioSystem.getClip();
-			clip.open(audioIn);
-			clip.start(); // Se reproduce una vez
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-
+    public void notifyListeners() {
+        for (FloorListener b : floorListeners) {
+            b.floorChanged();
+        }
+    }
 }
