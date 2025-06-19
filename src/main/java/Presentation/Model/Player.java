@@ -15,7 +15,7 @@ public class Player extends AbstractCharacter
 
     private final static int PLAYER_START_X = 60;
     private final static int PLAYER_START_Y = 60;
-    private final static int PLAYER_PIXELS_BY_STEP = 6;
+    private final static int PLAYER_PIXELS_BY_STEP = 5;
     private int bombCount;
     private Floor floor;
 	private PlayerController playerController;
@@ -56,8 +56,9 @@ public class Player extends AbstractCharacter
 
     public Player(BombermanComponent bombermanComponent, Floor floor) {
 		super(PLAYER_START_X, PLAYER_START_Y, PLAYER_PIXELS_BY_STEP);
+
 		bombCount = 1;
-		this.floor = floor;
+	this.floor = floor;
 		this.playerController = new PlayerController(this, floor);
 		floor.addObserver(playerController);
 		setPlayerButtons(bombermanComponent);

@@ -43,6 +43,6 @@ tasks.jar {
     // Esto incluye las dependencias en el .jar (fat jar)
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     from({
-        configurations.runtimeClasspath.get().filter { it.name.endsWith("jar") }.map { zipTree(it) }
+        configurations.runtimeClasspath.get().filter { it.name.endsWith("jar") }
     })
 }
