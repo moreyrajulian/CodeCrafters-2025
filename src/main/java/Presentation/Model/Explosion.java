@@ -1,9 +1,11 @@
 package Presentation.Model;
 
+//import Presentation.Model.Strategy.ExplosionStrategy;
+
 /**
- * This class represents the explosion, or the "fireballs", that are capable of killing an Presentation.Model.Enemy or a Presentation.Model.Player,
- * as well as destroying BREAKABLEBLOCKs. It needs a row and column -index that is used for logic and painting.
- * Its duration represents how many timesteps it will exist before it is removed.
+ * Esta clase representa la explosion, o las "bolas de fuego", aquellas capaces de matar a un Presentation.Model.Enemy o a un Presentation.Model.Player,
+ * así como de destruir BREAKABLEBLOCKS. Necesita un indice de fila y columna que se usa para la lógica y para el pintado.
+ * La duracion representa cuantos timesteps existirá antes de ser removida.
  */
 public class Explosion
 {

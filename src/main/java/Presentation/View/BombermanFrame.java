@@ -9,17 +9,16 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
 //Un JFrame es una ventana de Java Swing
-public class BombermanFrame extends JFrame
-{
+public class BombermanFrame extends JFrame {
     private Floor floor;
     private BombermanComponent bombermanComponent;
 
     public BombermanFrame(final String title, Floor floor) throws HeadlessException {
 		super(title); //Titulo en la ventana
-		this.floor = floor;
 		this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE); //La funcion setDefaultCloseOperation de JFrame
 																		 //determina que hacer cuando se cierra la ventana
 		bombermanComponent = new BombermanComponent(floor);
+		this.floor = floor;
 		floor.createPlayer(bombermanComponent, floor);
 		setKeyStrokes();
 
@@ -39,7 +38,7 @@ public class BombermanFrame extends JFrame
 
     private void setKeyStrokes() {
 
-	KeyStroke stroke = KeyStroke.getKeyStroke(KeyEvent.VK_W, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask());
+	KeyStroke stroke = KeyStroke.getKeyStroke(KeyEvent.VK_W, Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx());
 	bombermanComponent.getInputMap().put(stroke, "q");
 	bombermanComponent.getActionMap().put("q", quit);
     }
@@ -48,7 +47,6 @@ public class BombermanFrame extends JFrame
     {
 	public void actionPerformed(ActionEvent e) {
 		dispose();
-	    
 	}
     };
 }
