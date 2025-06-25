@@ -57,6 +57,7 @@ Tomamos un proyecto open source de Bomberman y lo **mejoramos y expandimos signi
 - 🧠 **Javier Alejandro Fatú** - [@JavierAlejandroFatu](https://github.com/JavierAlejandroFatu)
 - 🔧 **José María Galoppo** - [@JoseMGaloppo](https://github.com/JoseMGaloppo)
 - 🎮 **Pablo Castilla** - [@Pablo-C97](https://github.com/Pablo-C97)
+- 🎯 Julián Moreyra - [@moreyrajulian](https://github.com/moreyrajulian)
 
 ---
 
