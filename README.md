@@ -54,9 +54,9 @@ Tomamos un proyecto open source de Bomberman y lo **mejoramos y expandimos signi
 ## 👨‍👩‍👧‍👦 Equipo de desarrollo
 
 - 👨‍💻 **Saqib Daniel Mohammad Cabrejos** - [@CodeMadefromGod](https://github.com/CodeMadefromGod)
-- 🧠 **Javier Alejandro Fatu** - [@JavierAlejandroFatu](https://github.com/JavierAlejandroFatu)
-- 🔧 **José María** - [@JoseMGaloppo](https://github.com/JoseMGaloppo)
-- 🎮 **Pablo-C97** - [@Pablo-C97](https://github.com/Pablo-C97)
+- 🧠 **Javier Alejandro Fatú** - [@JavierAlejandroFatu](https://github.com/JavierAlejandroFatu)
+- 🔧 **José María Galoppo** - [@JoseMGaloppo](https://github.com/JoseMGaloppo)
+- 🎮 **Pablo Castilla** - [@Pablo-C97](https://github.com/Pablo-C97)
 
 ---
 
