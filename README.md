@@ -62,11 +62,11 @@ Tomamos un proyecto open source de Bomberman y lo **mejoramos y expandimos signi
 
 ## 📸 Capturas del juego
 
-![img_1.png](img_1.png)
+![image](https://github.com/user-attachments/assets/bc41e3c7-9182-476c-8dce-fb9aa681e3bd)
 
 
+![image](https://github.com/user-attachments/assets/c93ade84-a43a-4fb6-95da-d7033875fdab)
 
-![img.png](img.png)
 
 
 ---
